@@ -9,9 +9,9 @@ env:
   SOLUTION_FILE_PATH: .
 
 jobs:
-  Windows-x64-Debug:
-    runs-on: windows-latest
-    
+#  Windows-x64-Debug:
+#    runs-on: windows-latest
+#    
 #    steps:
 #      - name: Checkout Repository
 #        uses: actions/checkout@v3
