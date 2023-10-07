@@ -1,8 +1,11 @@
 #include "GBCodeGeneratorUtilities.h"
 #ifdef _WIN32
 #include <windows.h>
-#else
+#elif (__linux__)
+#include <linux/limits.h>
 #include <unistd.h>
+#else
+
 #endif
 
 namespace GB
