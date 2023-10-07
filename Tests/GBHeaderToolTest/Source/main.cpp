@@ -51,17 +51,23 @@ int main(int argc, char** argv)
 {
 	const fs::path exeFolder = GetExeDirectory();
 	std::cout << "Exe path is: " << exeFolder.string() << std::endl;
+#if _WIN32
 	const std::string& gbHeaderToolFilepath = exeFolder.string() + "/../GBHeaderTool/GBHeaderTool.exe";
-
+#else
+	const std::string& gbHeaderToolFilepath = exeFolder.string() + "/../GBHeaderTool/GBHeaderTool";
+#endif
 	const std::string& reflectionTestFilesSourceFolder = exeFolder.string() + "../../../Sandbox/Source/";
 	const std::string& inputFolder = reflectionTestFilesSourceFolder + "ReflectionTestFiles/AutoTestFolderToUse/";
 	const std::string& outputFolder = reflectionTestFilesSourceFolder + "GeneratedCode/";
 	const std::string& generatedCodeClassTestFilepath = outputFolder + "TestClassReflection_gen.cpp";
 	const std::string& generatedCodeStructTestFilepath = outputFolder + "TestStructReflection_gen.cpp";
 
-	// TODO: Platform detection and correct filepaths/commands for each platform?
-	//												 ../Binaries/Debug-windows-x86_64/GBHeaderTool/GBHeaderTool.exe		  ../Sandbox/Source/ReflectionTestFiles/AutoTestFolderToUse/	  ../Sandbox/Source/GeneratedCode/
-	std::string runCodeGeneratorCommand = "start " + gbHeaderToolFilepath + " "											+ inputFolder + " "												+ outputFolder;
+	// ../Binaries/Debug-windows-x86_64/GBHeaderTool/GBHeaderTool.exe ../Sandbox/Source/ReflectionTestFiles/AutoTestFolderToUse/ ../Sandbox/Source/GeneratedCode/
+#if _WIN32
+	std::string runCodeGeneratorCommand = "start " + gbHeaderToolFilepath + " "	+ inputFolder + " "	+ outputFolder;
+#else
+	std::string runCodeGeneratorCommand = gbHeaderToolFilepath + " " + inputFolder + " " + outputFolder;
+#endif
 	int codeGeneratorReturnCode = std::system(runCodeGeneratorCommand.c_str());
 	std::this_thread::sleep_for(5000ms);
 	

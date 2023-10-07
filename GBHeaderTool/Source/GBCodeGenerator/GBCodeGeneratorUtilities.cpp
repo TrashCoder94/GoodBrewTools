@@ -43,5 +43,4 @@ namespace GB
 		}
 		return true;
 	}
-
 }
