@@ -61,7 +61,6 @@ int main(int argc, char** argv)
 
 	result = codeGenerator.Generate();
 	assert(result == 0 && "CodeGenerator::Generate failed!");
-	system("pause");
 
 	return result;
 }

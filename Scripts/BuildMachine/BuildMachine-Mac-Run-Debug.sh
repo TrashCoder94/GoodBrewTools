@@ -1,6 +1,7 @@
 #!/bin/sh
 
 echo "Running Debug GBHeaderToolTest executable!"
+chmod +x Binaries/Debug-macosx-x86_64/GBHeaderTool/GBHeaderTool
 chmod +x Binaries/Debug-macosx-x86_64/GBHeaderToolTest/GBHeaderToolTest
 cd Binaries/Debug-macosx-x86_64/GBHeaderToolTest
 ./GBHeaderToolTest

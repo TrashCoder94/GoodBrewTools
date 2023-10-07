@@ -187,11 +187,9 @@ int main(int argc, char** argv)
 	if (!errorMessage.empty())
 	{
 		std::cout << "Error - GBHeaderToolTest Failed:\n" << errorMessage << std::endl;
-		system("pause");
 		return -1;
 	}
 
 	std::cout << "GBHeaderToolTest succeeded!" << std::endl;
-	system("pause");
 	return 0;
 }

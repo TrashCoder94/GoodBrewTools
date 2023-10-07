@@ -1,6 +1,7 @@
 #!/bin/sh
 
 echo "Running Release GBHeaderToolTest executable!"
+chmod +x Binaries/Release-macosx-x86_64/GBHeaderTool/GBHeaderTool
 chmod +x Binaries/Release-macosx-x86_64/GBHeaderToolTest/GBHeaderToolTest
 cd Binaries/Release-macosx-x86_64/GBHeaderToolTest
 ./GBHeaderToolTest
