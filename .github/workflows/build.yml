@@ -57,116 +57,117 @@ jobs:
           path: |
             Binaries/**
 
-  Linux-x64-Debug:
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v3
-        with:
-            submodules: recursive
-
-      - name: Setup and Install Prerequisites
-        working-directory: ${{env.GITHUB_WORKSPACE}}
-        run: | 
-          sudo apt-get update && sudo apt-get install xorg-dev libxrandr-dev libxcursor-dev libudev-dev libopenal-dev libflac-dev libvorbis-dev libgl1-mesa-dev libegl1-mesa-dev libdrm-dev libgbm-dev xvfb fluxbox
-          
-      - name: Build
-        working-directory: ${{env.GITHUB_WORKSPACE}}
-        run: |
-          chmod +x Scripts/BuildMachine/BuildMachine-Linux-Build-Debug.sh
-          Scripts/BuildMachine/BuildMachine-Linux-Build-Debug.sh
-        
-      - name: Archive Linux Artifacts
-        uses: actions/upload-artifact@v3
-        with:
-          name: Linux-Binaries-Debug
-          retention-days: 2
-          path: |
-            Binaries/**
-            
-  Linux-x64-Release:
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v3
-        with:
-            submodules: recursive
-
-      - name: Setup and Install Prerequisites
-        working-directory: ${{env.GITHUB_WORKSPACE}}
-        run: | 
-          sudo apt-get update && sudo apt-get install xorg-dev libxrandr-dev libxcursor-dev libudev-dev libopenal-dev libflac-dev libvorbis-dev libgl1-mesa-dev libegl1-mesa-dev libdrm-dev libgbm-dev xvfb fluxbox
-          
-      - name: Build
-        working-directory: ${{env.GITHUB_WORKSPACE}}
-        run: |
-          chmod +x Scripts/BuildMachine/BuildMachine-Linux-Build-Release.sh
-          Scripts/BuildMachine/BuildMachine-Linux-Build-Release.sh
-        
-      - name: Archive Linux Artifacts
-        uses: actions/upload-artifact@v3
-        with:
-          name: Linux-Binaries-Release
-          retention-days: 2
-          path: |
-            Binaries/**
-
-  Mac-x64-Debug:
-    runs-on: macos-latest
-
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v3
-        with:
-            submodules: recursive
-      
-      - name: Setup and Install Prerequisites
-        working-directory: ${{env.GITHUB_WORKSPACE}}
-        run: | 
-          brew update
-          brew install coreutils
-      
-      - name: Build
-        working-directory: ${{env.GITHUB_WORKSPACE}}
-        run: |
-          chmod +x Scripts/BuildMachine/BuildMachine-Mac-Build-Debug.sh
-          Scripts/BuildMachine/BuildMachine-Mac-Build-Debug.sh
-
-      - name: Archive Mac Artifacts
-        uses: actions/upload-artifact@v3
-        with:
-          name: Mac-Binaries-Debug
-          retention-days: 2
-          path: |
-            Binaries/**
-  
-  Mac-x64-Release:
-    runs-on: macos-latest
-
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v3
-        with:
-            submodules: recursive
-      
-      - name: Setup and Install Prerequisites
-        working-directory: ${{env.GITHUB_WORKSPACE}}
-        run: | 
-          brew update
-          brew install coreutils
-      
-      - name: Build
-        working-directory: ${{env.GITHUB_WORKSPACE}}
-        run: |
-          chmod +x Scripts/BuildMachine/BuildMachine-Mac-Build-Release.sh
-          Scripts/BuildMachine/BuildMachine-Mac-Build-Release.sh
-
-      - name: Archive Mac Artifacts
-        uses: actions/upload-artifact@v3
-        with:
-          name: Mac-Binaries-Release
-          retention-days: 2
-          path: |
-            Binaries/**
+#  Linux-x64-Debug:
+#    runs-on: ubuntu-latest
+#
+#    steps:
+#      - name: Checkout Repository
+#        uses: actions/checkout@v3
+#        with:
+#            submodules: recursive
+#
+#      - name: Setup and Install Prerequisites
+#        working-directory: ${{env.GITHUB_WORKSPACE}}
+#        run: | 
+#          sudo apt-get update && sudo apt-get install xorg-dev libxrandr-dev libxcursor-dev libudev-dev libopenal-dev libflac-dev libvorbis-dev libgl1-mesa-dev libegl1-mesa-dev libdrm-dev libgbm-dev xvfb fluxbox
+#          
+#      - name: Build
+#        working-directory: ${{env.GITHUB_WORKSPACE}}
+#        run: |
+#          chmod +x Scripts/BuildMachine/BuildMachine-Linux-Build-Debug.sh
+#          Scripts/BuildMachine/BuildMachine-Linux-Build-Debug.sh
+#        
+#      - name: Archive Linux Artifacts
+#        uses: actions/upload-artifact@v3
+#        with:
+#          name: Linux-Binaries-Debug
+#          retention-days: 2
+#          path: |
+#            Binaries/**
+#            
+#  Linux-x64-Release:
+#    runs-on: ubuntu-latest
+#
+#    steps:
+#      - name: Checkout Repository
+#        uses: actions/checkout@v3
+#        with:
+#            submodules: recursive
+#
+#      - name: Setup and Install Prerequisites
+#        working-directory: ${{env.GITHUB_WORKSPACE}}
+#        run: | 
+#          sudo apt-get update && sudo apt-get install xorg-dev libxrandr-dev libxcursor-dev libudev-dev libopenal-dev libflac-dev libvorbis-dev libgl1-mesa-dev libegl1-mesa-dev libdrm-dev libgbm-dev xvfb fluxbox
+#          
+#      - name: Build
+#        working-directory: ${{env.GITHUB_WORKSPACE}}
+#        run: |
+#          chmod +x Scripts/BuildMachine/BuildMachine-Linux-Build-Release.sh
+#          Scripts/BuildMachine/BuildMachine-Linux-Build-Release.sh
+#        
+#      - name: Archive Linux Artifacts
+#        uses: actions/upload-artifact@v3
+#        with:
+#          name: Linux-Binaries-Release
+#          retention-days: 2
+#          path: |
+#            Binaries/**
+#
+#  Mac-x64-Debug:
+#    runs-on: macos-latest
+#
+#    steps:
+#      - name: Checkout Repository
+#        uses: actions/checkout@v3
+#        with:
+#            submodules: recursive
+#      
+#      - name: Setup and Install Prerequisites
+#        working-directory: ${{env.GITHUB_WORKSPACE}}
+#        run: | 
+#          brew update
+#          brew install coreutils
+#      
+#      - name: Build
+#        working-directory: ${{env.GITHUB_WORKSPACE}}
+#        run: |
+#          chmod +x Scripts/BuildMachine/BuildMachine-Mac-Build-Debug.sh
+#          Scripts/BuildMachine/BuildMachine-Mac-Build-Debug.sh
+#
+#      - name: Archive Mac Artifacts
+#        uses: actions/upload-artifact@v3
+#        with:
+#          name: Mac-Binaries-Debug
+#          retention-days: 2
+#          path: |
+#            Binaries/**
+#  
+#  Mac-x64-Release:
+#    runs-on: macos-latest
+#
+#    steps:
+#      - name: Checkout Repository
+#        uses: actions/checkout@v3
+#        with:
+#            submodules: recursive
+#      
+#      - name: Setup and Install Prerequisites
+#        working-directory: ${{env.GITHUB_WORKSPACE}}
+#        run: | 
+#          brew update
+#          brew install coreutils
+#      
+#      - name: Build
+#        working-directory: ${{env.GITHUB_WORKSPACE}}
+#        run: |
+#          chmod +x Scripts/BuildMachine/BuildMachine-Mac-Build-Release.sh
+#          Scripts/BuildMachine/BuildMachine-Mac-Build-Release.sh
+#
+#      - name: Archive Mac Artifacts
+#        uses: actions/upload-artifact@v3
+#        with:
+#          name: Mac-Binaries-Release
+#          retention-days: 2
+#          path: |
+#            Binaries/**
+#
