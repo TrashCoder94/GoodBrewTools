@@ -13,50 +13,8 @@ env:
   SOLUTION_FILE_PATH: .
 
 jobs:
-  Windows-x64-Debug:
-    runs-on: windows-latest
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
-
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v3
-        with:
-            submodules: recursive
-      
-      - name: Download Workflow Artifact
-        uses: dawidd6/action-download-artifact@v2.26.0
-        with:
-          workflow: build.yml
-          name: Windows-Binaries-Debug
-          path: Binaries
-  
-      - name: Test
-        working-directory: ${{env.GITHUB_WORKSPACE}}
-        run: Scripts/BuildMachine/BuildMachine-Windows-Run-Debug.bat
-
-  Windows-x64-Release:
-    runs-on: windows-latest
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
-
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v3
-        with:
-            submodules: recursive
-      
-      - name: Download Workflow Artifact
-        uses: dawidd6/action-download-artifact@v2.26.0
-        with:
-          workflow: build.yml
-          name: Windows-Binaries-Release
-          path: Binaries
-  
-      - name: Test
-        working-directory: ${{env.GITHUB_WORKSPACE}}
-        run: Scripts/BuildMachine/BuildMachine-Windows-Run-Release.bat
-
-#  Linux-x64-Debug:
-#    runs-on: ubuntu-latest
+#  Windows-x64-Debug:
+#    runs-on: windows-latest
 #    if: ${{ github.event.workflow_run.conclusion == 'success' }}
 #
 #    steps:
@@ -69,21 +27,63 @@ jobs:
 #        uses: dawidd6/action-download-artifact@v2.26.0
 #        with:
 #          workflow: build.yml
-#          name: Linux-Binaries-Debug
+#          name: Windows-Binaries-Debug
 #          path: Binaries
-#
-#      - name: Setup and Install Prerequisites
-#        working-directory: ${{env.GITHUB_WORKSPACE}}
-#        run: |
-#          export DISPLAY=:0.0
-#          sudo apt-get update && sudo apt-get install xorg-dev libxrandr-dev libxcursor-dev libudev-dev libopenal-dev libflac-dev libvorbis-dev libgl1-mesa-dev libegl1-mesa-dev libdrm-dev libgbm-dev xvfb fluxbox
-#         
+#  
 #      - name: Test
 #        working-directory: ${{env.GITHUB_WORKSPACE}}
-#        run: |
-#          chmod +x Scripts/BuildMachine/BuildMachine-Linux-Run-Debug.sh
-#          xvfb-run -a --server-args="-ac -screen 0 1600x900x24" Scripts/BuildMachine/BuildMachine-Linux-Run-Debug.sh
+#        run: Scripts/BuildMachine/BuildMachine-Windows-Run-Debug.bat
 #
+#  Windows-x64-Release:
+#    runs-on: windows-latest
+#    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+#
+#    steps:
+#      - name: Checkout Repository
+#        uses: actions/checkout@v3
+#        with:
+#            submodules: recursive
+#      
+#      - name: Download Workflow Artifact
+#        uses: dawidd6/action-download-artifact@v2.26.0
+#        with:
+#          workflow: build.yml
+#          name: Windows-Binaries-Release
+#          path: Binaries
+#  
+#      - name: Test
+#        working-directory: ${{env.GITHUB_WORKSPACE}}
+#        run: Scripts/BuildMachine/BuildMachine-Windows-Run-Release.bat
+#
+  Linux-x64-Debug:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+        with:
+            submodules: recursive
+      
+      - name: Download Workflow Artifact
+        uses: dawidd6/action-download-artifact@v2.26.0
+        with:
+          workflow: build.yml
+          name: Linux-Binaries-Debug
+          path: Binaries
+
+      - name: Setup and Install Prerequisites
+        working-directory: ${{env.GITHUB_WORKSPACE}}
+        run: |
+          export DISPLAY=:0.0
+          sudo apt-get update && sudo apt-get install xorg-dev libxrandr-dev libxcursor-dev libudev-dev libopenal-dev libflac-dev libvorbis-dev libgl1-mesa-dev libegl1-mesa-dev libdrm-dev libgbm-dev xvfb fluxbox
+         
+      - name: Test
+        working-directory: ${{env.GITHUB_WORKSPACE}}
+        run: |
+          chmod +x Scripts/BuildMachine/BuildMachine-Linux-Run-Debug.sh
+          xvfb-run -a --server-args="-ac -screen 0 1600x900x24" Scripts/BuildMachine/BuildMachine-Linux-Run-Debug.sh
+
 #  Linux-x64-Release:
 #    runs-on: ubuntu-latest
 #    if: ${{ github.event.workflow_run.conclusion == 'success' }}
