@@ -21,7 +21,7 @@ namespace GB
 			if (Get().m_Classes.find(name) == Get().m_Classes.end())
 			{
 				std::cout << "Registering class " << name << " with ClassRegistry" << std::endl;
-				Get().m_Classes.insert(std::make_pair(name, &reflect::Constructor<T>));
+				Get().m_Classes.insert(std::make_pair(name, &GB::Constructor<T>));
 			}
 		}
 
