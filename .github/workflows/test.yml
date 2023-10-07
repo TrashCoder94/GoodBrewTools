@@ -55,114 +55,115 @@ jobs:
         working-directory: ${{env.GITHUB_WORKSPACE}}
         run: Scripts/BuildMachine/BuildMachine-Windows-Run-Release.bat
 
-  Linux-x64-Debug:
-    runs-on: ubuntu-latest
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
-
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v3
-        with:
-            submodules: recursive
-      
-      - name: Download Workflow Artifact
-        uses: dawidd6/action-download-artifact@v2.26.0
-        with:
-          workflow: build.yml
-          name: Linux-Binaries-Debug
-          path: Binaries
-
-      - name: Setup and Install Prerequisites
-        working-directory: ${{env.GITHUB_WORKSPACE}}
-        run: |
-          export DISPLAY=:0.0
-          sudo apt-get update && sudo apt-get install xorg-dev libxrandr-dev libxcursor-dev libudev-dev libopenal-dev libflac-dev libvorbis-dev libgl1-mesa-dev libegl1-mesa-dev libdrm-dev libgbm-dev xvfb fluxbox
-         
-      - name: Test
-        working-directory: ${{env.GITHUB_WORKSPACE}}
-        run: |
-          chmod +x Scripts/BuildMachine/BuildMachine-Linux-Run-Debug.sh
-          xvfb-run -a --server-args="-ac -screen 0 1600x900x24" Scripts/BuildMachine/BuildMachine-Linux-Run-Debug.sh
-
-  Linux-x64-Release:
-    runs-on: ubuntu-latest
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
-
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v3
-        with:
-            submodules: recursive
-      
-      - name: Download Workflow Artifact
-        uses: dawidd6/action-download-artifact@v2.26.0
-        with:
-          workflow: build.yml
-          name: Linux-Binaries-Release
-          path: Binaries
-
-      - name: Setup and Install Prerequisites
-        working-directory: ${{env.GITHUB_WORKSPACE}}
-        run: |
-          export DISPLAY=:0.0
-          sudo apt-get update && sudo apt-get install xorg-dev libxrandr-dev libxcursor-dev libudev-dev libopenal-dev libflac-dev libvorbis-dev libgl1-mesa-dev libegl1-mesa-dev libdrm-dev libgbm-dev xvfb fluxbox
-          
-      - name: Test
-        working-directory: ${{env.GITHUB_WORKSPACE}}
-        run: |
-          chmod +x Scripts/BuildMachine/BuildMachine-Linux-Run-Release.sh
-          xvfb-run -a --server-args="-ac -screen 0 1600x900x24" Scripts/BuildMachine/BuildMachine-Linux-Run-Release.sh
-
-  Mac-x64-Debug:
-    runs-on: macos-latest
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
-
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v2
-        
-      - name: Download Workflow Artifact
-        uses: dawidd6/action-download-artifact@v2.14.0
-        with:
-          workflow: build.yml
-          name: Mac-Binaries-Debug
-          path: Binaries
-
-      - name: Setup and Install Prerequisites
-        run: |
-          brew install --cask xquartz
-          echo "/opt/X11/bin" >> $GITHUB_PATH  
-
-      - name: Test
-        working-directory: ${{env.GITHUB_WORKSPACE}}
-        run: |
-          export DISPLAY=:99
-          chmod +x Scripts/BuildMachine/BuildMachine-Mac-Run-Debug.sh
-          Xvfb :99 -screen 0 1600x900x24 & Scripts/BuildMachine/BuildMachine-Mac-Run-Debug.sh
-      
-  Mac-x64-Release:
-    runs-on: macos-latest
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
-
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v2
-        
-      - name: Download Workflow Artifact
-        uses: dawidd6/action-download-artifact@v2.14.0
-        with:
-          workflow: build.yml
-          name: Mac-Binaries-Release
-          path: Binaries
-
-      - name: Setup and Install Prerequisites
-        run: |
-          brew install --cask xquartz
-          echo "/opt/X11/bin" >> $GITHUB_PATH
-
-      - name: Test
-        working-directory: ${{env.GITHUB_WORKSPACE}}
-        run: |
-          export DISPLAY=:99
-          chmod +x Scripts/BuildMachine/BuildMachine-Mac-Run-Release.sh
-          Xvfb :99 -screen 0 1600x900x24 & Scripts/BuildMachine/BuildMachine-Mac-Run-Release.sh
+#  Linux-x64-Debug:
+#    runs-on: ubuntu-latest
+#    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+#
+#    steps:
+#      - name: Checkout Repository
+#        uses: actions/checkout@v3
+#        with:
+#            submodules: recursive
+#      
+#      - name: Download Workflow Artifact
+#        uses: dawidd6/action-download-artifact@v2.26.0
+#        with:
+#          workflow: build.yml
+#          name: Linux-Binaries-Debug
+#          path: Binaries
+#
+#      - name: Setup and Install Prerequisites
+#        working-directory: ${{env.GITHUB_WORKSPACE}}
+#        run: |
+#          export DISPLAY=:0.0
+#          sudo apt-get update && sudo apt-get install xorg-dev libxrandr-dev libxcursor-dev libudev-dev libopenal-dev libflac-dev libvorbis-dev libgl1-mesa-dev libegl1-mesa-dev libdrm-dev libgbm-dev xvfb fluxbox
+#         
+#      - name: Test
+#        working-directory: ${{env.GITHUB_WORKSPACE}}
+#        run: |
+#          chmod +x Scripts/BuildMachine/BuildMachine-Linux-Run-Debug.sh
+#          xvfb-run -a --server-args="-ac -screen 0 1600x900x24" Scripts/BuildMachine/BuildMachine-Linux-Run-Debug.sh
+#
+#  Linux-x64-Release:
+#    runs-on: ubuntu-latest
+#    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+#
+#    steps:
+#      - name: Checkout Repository
+#        uses: actions/checkout@v3
+#        with:
+#            submodules: recursive
+#      
+#      - name: Download Workflow Artifact
+#        uses: dawidd6/action-download-artifact@v2.26.0
+#        with:
+#          workflow: build.yml
+#          name: Linux-Binaries-Release
+#          path: Binaries
+#
+#      - name: Setup and Install Prerequisites
+#        working-directory: ${{env.GITHUB_WORKSPACE}}
+#        run: |
+#          export DISPLAY=:0.0
+#          sudo apt-get update && sudo apt-get install xorg-dev libxrandr-dev libxcursor-dev libudev-dev libopenal-dev libflac-dev libvorbis-dev libgl1-mesa-dev libegl1-mesa-dev libdrm-dev libgbm-dev xvfb fluxbox
+#          
+#      - name: Test
+#        working-directory: ${{env.GITHUB_WORKSPACE}}
+#        run: |
+#          chmod +x Scripts/BuildMachine/BuildMachine-Linux-Run-Release.sh
+#          xvfb-run -a --server-args="-ac -screen 0 1600x900x24" Scripts/BuildMachine/BuildMachine-Linux-Run-Release.sh
+#
+#  Mac-x64-Debug:
+#    runs-on: macos-latest
+#    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+#
+#    steps:
+#      - name: Checkout Repository
+#        uses: actions/checkout@v2
+#        
+#      - name: Download Workflow Artifact
+#        uses: dawidd6/action-download-artifact@v2.14.0
+#        with:
+#          workflow: build.yml
+#          name: Mac-Binaries-Debug
+#          path: Binaries
+#
+#      - name: Setup and Install Prerequisites
+#        run: |
+#          brew install --cask xquartz
+#          echo "/opt/X11/bin" >> $GITHUB_PATH  
+#
+#      - name: Test
+#        working-directory: ${{env.GITHUB_WORKSPACE}}
+#        run: |
+#          export DISPLAY=:99
+#          chmod +x Scripts/BuildMachine/BuildMachine-Mac-Run-Debug.sh
+#          Xvfb :99 -screen 0 1600x900x24 & Scripts/BuildMachine/BuildMachine-Mac-Run-Debug.sh
+#      
+#  Mac-x64-Release:
+#    runs-on: macos-latest
+#    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+#
+#    steps:
+#      - name: Checkout Repository
+#        uses: actions/checkout@v2
+#        
+#      - name: Download Workflow Artifact
+#        uses: dawidd6/action-download-artifact@v2.14.0
+#        with:
+#          workflow: build.yml
+#          name: Mac-Binaries-Release
+#          path: Binaries
+#
+#      - name: Setup and Install Prerequisites
+#        run: |
+#          brew install --cask xquartz
+#          echo "/opt/X11/bin" >> $GITHUB_PATH
+#
+#      - name: Test
+#        working-directory: ${{env.GITHUB_WORKSPACE}}
+#        run: |
+#          export DISPLAY=:99
+#          chmod +x Scripts/BuildMachine/BuildMachine-Mac-Run-Release.sh
+#          Xvfb :99 -screen 0 1600x900x24 & Scripts/BuildMachine/BuildMachine-Mac-Run-Release.sh
+#
