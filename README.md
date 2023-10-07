@@ -1,6 +1,8 @@
 # GoodBrewTools
 
-
+[![Build](https://github.com/TrashCoder94/GoodBrewTools/actions/workflows/build.yml/badge.svg)](https://github.com/TrashCoder94/GoodBrewTools/actions/workflows/build.yml)
+[![Test](https://github.com/TrashCoder94/GoodBrewTools/actions/workflows/test.yml/badge.svg)](https://github.com/TrashCoder94/GoodBrewTools/actions/workflows/test.yml)
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/9cd29dd14f8c4a3f850a6d0fd89674eb)](https://app.codacy.com/gh/TrashCoder94/GoodBrewTools/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
 
 ## Prerequisites
 
