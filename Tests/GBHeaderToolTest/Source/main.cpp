@@ -17,7 +17,7 @@ namespace fs = std::filesystem;
 #include <linux/limits.h>
 #include <unistd.h>
 #else
-
+#include <unistd.h>
 #endif
 
 fs::path GetExeDirectory();
