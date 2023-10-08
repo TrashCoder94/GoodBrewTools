@@ -184,7 +184,7 @@ namespace GB
 			while (std::getline(file, line))
 			{
 				// Class/struct name.
-				const bool isLineWhereClassIsDeclared = (line.find("class") != std::string::npos);
+				const bool isLineWhereClassIsDeclared = (line.find("class") != std::string::npos && line.find("template") == std::string::npos);
 				const bool isLineWhereStructIsDeclared = (line.find("struct") != std::string::npos);
 				if (isLineWhereClassIsDeclared || isLineWhereStructIsDeclared)
 				{

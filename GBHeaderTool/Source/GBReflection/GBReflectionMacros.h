@@ -20,7 +20,7 @@
     reflect::TypeDescriptor_Struct type::Reflection{type::initReflection}; \
     void type::initReflection(reflect::TypeDescriptor_Struct* typeDesc) { \
         using T = type; \
-		reflect::ClassRegistry::Get().Register<type>(#type);\
+		GB::ClassRegistry::Get().Register<type>(#type);\
         typeDesc->name = #type; \
         typeDesc->size = sizeof(T); \
 		typeDesc->fieldType = reflect::FieldType::Class;\
