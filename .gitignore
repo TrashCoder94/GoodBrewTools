@@ -359,6 +359,7 @@ MigrationBackup/
 **/Binaries/
 **/Intermediate/
 **/GeneratedCode/
+**Makefile
 *.log
 *html
 

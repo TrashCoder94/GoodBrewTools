@@ -10,3 +10,11 @@ then
 echo "Generating project files failed, exiting out..."
 exit 1
 fi
+
+echo "Building Debug Configuration"
+make config=debug_x86_64
+if [ $? -ne 0 ] 
+then
+echo "Building Debug Configuration failed, exiting out..."
+exit 1
+fi
