@@ -355,6 +355,7 @@ MigrationBackup/
 **.vcxproj
 **.vcxproj.filters
 **.vcxproj.user
+**.csproj
 *.sln
 **/Binaries/
 **/Intermediate/

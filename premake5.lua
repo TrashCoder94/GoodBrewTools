@@ -77,6 +77,7 @@ outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 
 -- Include directories
 IncludeDir = {}
+IncludeDir["imgui"] = "%{wks.location}/ThirdParty/imgui"
 IncludeDir["Reflection"] = "%{wks.location}/GBHeaderTool/ThirdParty/Reflection"
 IncludeDir["GBReflection"] = "%{wks.location}/GBHeaderTool/Source/GBReflection"
 IncludeDir["GBHeaderTool"] = "%{wks.location}/GBHeaderTool/Source"
@@ -102,6 +103,9 @@ group "Dependencies"
 group ""
 
 group "GBTools"
+if os.host() == "windows" then
+	include "CommitChecker"
+end
 	include "GBHeaderTool"
 group ""
 
