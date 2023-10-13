@@ -3,10 +3,95 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:CommitChecker"
+        xmlns:fa="http://schemas.fontawesome.io/icons/"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <Grid>
+        Title="MainWindow" Height="350" Width="400"
+        WindowStartupLocation="CenterScreen"
+        WindowStyle="None"
+        ResizeMode="NoResize"
+        Background="#181735">
 
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="25"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+
+        <Grid Background="#0f0f2D" Grid.ColumnSpan="8">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+        </Grid>
+
+        <StackPanel Grid.Row="1"
+                    Margin="0,10,0,0">
+            <StackPanel>
+                <StackPanel Orientation="Horizontal"
+                            HorizontalAlignment="Center">
+                    <TextBlock Text="Commit Checker"
+                               Foreground="White"
+                               VerticalAlignment="Center"
+                               FontFamily="Corbel"
+                               FontWeight="Bold"
+                               FontSize="20"/>
+                </StackPanel>
+
+                <TextBox Name="CommitTitle"
+                         Width="200" MaxLength="100" 
+                         Foreground="White"
+                         Background="#FF424079"
+                         BorderBrush="White"
+                         Margin="0,15,0,0"/>
+
+                <TextBox Name="CommitDescription"
+                         Width="250" Height="150"
+                         TextWrapping="Wrap"
+                         AcceptsReturn="True"
+                         VerticalScrollBarVisibility="Auto"
+                         Foreground="White"
+                         Background="#FF424079"
+                         BorderBrush="White"
+                         Margin="0,15,0,0"/>
+            </StackPanel>
+
+            <StackPanel Orientation="Horizontal"
+                        Margin="0,15,0,0"
+                        HorizontalAlignment="Center">
+                <Button Foreground="White"
+                        FontSize="14"
+                        FontWeight="Medium"
+                        Margin="0,0,20,0">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="Compile"
+                                   Margin="0,0,10,0"/>
+                        <fa:ImageAwesome Foreground="White" 
+                                         Icon="Cog" 
+                                         Spin="True" 
+                                         SpinDuration="5" 
+                                         Width="15" 
+                                         Height="15"/>
+                    </StackPanel>
+                </Button>
+
+                <Button Content="Commit"
+                        Foreground="White"
+                        FontSize="14"
+                        FontWeight="Medium">
+                </Button>
+            </StackPanel>
+            
+        </StackPanel>
+        
     </Grid>
 </Window>
