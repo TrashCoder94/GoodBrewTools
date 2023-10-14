@@ -26,7 +26,6 @@ project "CommitChecker"
 	links
 	{
 		"Microsoft.Csharp",
-		"FontAwesome.WPF",
 		"PresentationCore",
 		"PresentationFramework",
 		"System",

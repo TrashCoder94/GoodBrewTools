@@ -3,7 +3,6 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:fa="http://schemas.fontawesome.io/icons/"
         mc:Ignorable="d"
         Title="MainWindow" Height="350" Width="400"
         WindowStartupLocation="CenterScreen"
@@ -81,12 +80,13 @@
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Text="Compile"
                                    Margin="0,0,10,0"/>
-                        <fa:ImageAwesome Foreground="White" 
-                                         Icon="Cog" 
-                                         Spin="True" 
-                                         SpinDuration="5" 
-                                         Width="15" 
-                                         Height="15"/>
+
+                        <Image Width="15" Height="15"
+                               Source="Assets\Images\LoadingCog.png" 
+                               HorizontalAlignment="Center" 
+                               VerticalAlignment="Center"
+                               Style="{StaticResource Spinner}">
+                        </Image>
                     </StackPanel>
                 </Button>
             </StackPanel>

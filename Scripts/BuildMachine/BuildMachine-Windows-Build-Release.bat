@@ -6,9 +6,6 @@ call ThirdParty\premake\Binaries\premake5.exe vs2022
 devenv GBTools.sln /rebuild Release /project Premake
 if %errorlevel% neq 0 exit /b %errorlevel%
 
-echo "Restoring nuget packages"
-nuget restore GBTools.sln
-
 echo "Building Release Configuration"
 devenv GBTools.sln /rebuild Release
 if %errorlevel% neq 0 exit /b %errorlevel%
