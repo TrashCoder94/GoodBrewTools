@@ -68,10 +68,16 @@
             <StackPanel Orientation="Horizontal"
                         Margin="0,15,0,0"
                         HorizontalAlignment="Center">
-                <Button Foreground="White"
+                <Button Content="Targets"
+                        Foreground="White"
                         FontSize="14"
                         FontWeight="Medium"
                         Margin="0,0,20,0">
+                </Button>
+
+                <Button Foreground="White"
+                        FontSize="14"
+                        FontWeight="Medium">
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Text="Compile"
                                    Margin="0,0,10,0"/>
@@ -83,11 +89,16 @@
                                          Height="15"/>
                     </StackPanel>
                 </Button>
+            </StackPanel>
 
+            <StackPanel Orientation="Horizontal"
+                        Margin="0,15,0,0"
+                        HorizontalAlignment="Center">
                 <Button Content="Commit"
                         Foreground="White"
                         FontSize="14"
-                        FontWeight="Medium">
+                        FontWeight="Medium"
+                        IsEnabled="False">
                 </Button>
             </StackPanel>
             
