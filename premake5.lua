@@ -98,6 +98,33 @@ function copyReflectionFilesAcross()
 	filter {}
 end
 
+function copyCommitCheckerAssetsToBinaryFolder()
+	filter { "system:windows" }
+		postbuildcommands
+		{
+			"{COPY} %{wks.location}/CommitChecker/Source/Assets/ $(TargetDir)/Assets/"
+		}
+	filter {}
+end
+
+function copyCommitCheckerScriptsToBinaryFolder()
+	filter { "system:windows" }
+		postbuildcommands
+		{
+			"{COPY} %{wks.location}/Scripts/CommitChecker/ $(TargetDir)"
+		}
+	filter {}
+end
+
+function copyCommitCheckerToToolsForTheToolsRepoFolder()
+	filter { "system:windows" }
+		postbuildcommands
+		{
+			"{COPY} $(TargetDir) %{wks.location}/ToolsForTheToolsRepo/CommitChecker/"
+		}
+	filter {}
+end
+
 group "Dependencies"
 	include "ThirdParty/premake"
 group ""

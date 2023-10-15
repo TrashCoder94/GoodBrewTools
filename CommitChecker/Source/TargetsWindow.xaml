@@ -7,46 +7,124 @@
         Title="Targets" Height="250" Width="400"
         WindowStartupLocation="CenterScreen"
         WindowStyle="None"
+        IsVisibleChanged="TargetsWindow_IsVisibleChanged"
         ResizeMode="NoResize"
         Background="#181735">
 
     <Grid>
         <Grid.RowDefinitions>
+            <RowDefinition Height="25"/>
+            <RowDefinition/>
+            <RowDefinition Height="130"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
 
         <Grid.ColumnDefinitions>
             <ColumnDefinition/>
+            <ColumnDefinition/>
         </Grid.ColumnDefinitions>
 
+        <Grid Background="#0f0f2D" 
+              Grid.Row="0"
+              Grid.ColumnSpan="8"
+              MouseDown="TargetsWindow_TitleBar_MouseDown">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+        </Grid>
+
         <StackPanel Grid.Row="1"
-                    Margin="0,10,0,0">
-            <StackPanel>
-                <StackPanel Orientation="Horizontal"
-                            HorizontalAlignment="Center">
-                    <TextBlock Text="Platforms/Configurations"
-                               Foreground="White"
-                               VerticalAlignment="Center"
-                               FontFamily="Corbel"
-                               FontWeight="Bold"
-                               FontSize="20"/>
-                </StackPanel>
-
-
-                
-            </StackPanel>
-
-            <StackPanel Orientation="Horizontal"
-                        Margin="0,15,0,0"
-                        HorizontalAlignment="Center">
-                <Button Content="Save And Close"
-                        Foreground="White"
-                        FontSize="14"
-                        FontWeight="Medium">
-                </Button>
-            </StackPanel>
-
+                    Grid.ColumnSpan="2"
+                    Margin="0,10,0,0"
+                    VerticalAlignment="Center">
+            <TextBlock Text="Platforms/Configurations"
+                       Foreground="White"
+                       HorizontalAlignment="Center"
+                       FontFamily="Corbel"
+                       FontWeight="Bold"
+                       FontSize="20"/>
         </StackPanel>
 
+        <!--Windows targets to compile with this tool-->
+        <StackPanel Grid.Row="2"
+                    Grid.Column="0"
+                    Orientation="Vertical">
+            <TextBlock Text="Windows"
+                       Margin="0,15,0,0"
+                       HorizontalAlignment="Center"
+                       FontWeight="Bold"
+                       FontSize="13"
+                       />
+            <StackPanel Orientation="Vertical">
+                <TextBlock Text="Debug"
+                           HorizontalAlignment="Center"/>
+                <CheckBox  Name="Checkbox_Targets_DebugWindows"
+                           HorizontalAlignment="Center"/>
+            </StackPanel>
+            <StackPanel Orientation="Vertical">
+                <TextBlock Text="Release"
+                           HorizontalAlignment="Center"/>
+                <CheckBox  Name="Checkbox_Targets_ReleaseWindows"
+                           HorizontalAlignment="Center"/>
+            </StackPanel>
+            <StackPanel Orientation="Vertical">
+                <TextBlock Text="Shipping"
+                           HorizontalAlignment="Center"/>
+                <CheckBox  Name="Checkbox_Targets_ShippingWindows"
+                           HorizontalAlignment="Center"/>
+            </StackPanel>
+        </StackPanel>
+
+        <!--Linux targets to compile with this tool-->
+        <StackPanel Grid.Row="2"
+                    Grid.Column="1"
+                    Orientation="Vertical">
+            <TextBlock Text="Linux"
+                       Margin="0,15,0,0"
+                       HorizontalAlignment="Center"
+                       FontWeight="Bold"
+                       FontSize="13"/>
+            <!--Enable Linux Debug by default-->
+            <StackPanel Orientation="Vertical">
+                <TextBlock Text="Debug"
+                   HorizontalAlignment="Center"/>
+                <CheckBox  Name="Checkbox_Targets_DebugLinux"
+                   HorizontalAlignment="Center"
+                   IsChecked="True"/>
+            </StackPanel>
+            <StackPanel Orientation="Vertical">
+                <TextBlock Text="Release"
+                   HorizontalAlignment="Center"/>
+                <CheckBox  Name="Checkbox_Targets_ReleaseLinux"
+                   HorizontalAlignment="Center"/>
+            </StackPanel>
+            <StackPanel Orientation="Vertical">
+                <TextBlock Text="Shipping"
+                   HorizontalAlignment="Center"/>
+                <CheckBox  Name="Checkbox_Targets_ShippingLinux"
+                   HorizontalAlignment="Center"/>
+            </StackPanel>
+        </StackPanel>
+
+        <StackPanel Grid.Row="3"
+                    Grid.ColumnSpan="2"
+                    Margin="0,10,0,0"
+                    VerticalAlignment="Center">
+            <Button Name="TargetsWindow_Button_SaveAndClose"
+                    Content="Save And Close"
+                    Foreground="White"
+                    FontSize="14"
+                    FontWeight="Medium"
+                    ButtonBase.Click="TargetsWindow_Button_SaveAndClose_Click">
+            </Button>
+        </StackPanel>
+            
     </Grid>
 </Window>

@@ -20,7 +20,8 @@
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
 
-        <Grid Background="#0f0f2D" Grid.ColumnSpan="8">
+        <Grid Background="#0f0f2D" Grid.ColumnSpan="8"
+              MouseDown="MainWindow_TitleBar_MouseDown">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition/>
                 <ColumnDefinition/>
@@ -86,14 +87,26 @@
                         Foreground="White"
                         FontSize="14"
                         FontWeight="Medium"
-                        Margin="0,0,20,0">
+                        Margin="0,0,20,0"
+                        ButtonBase.Click="MainWindow_Button_Targets_OnClick">
                 </Button>
 
-                <Button Foreground="White"
+                <Button Name="Button_Compile"
+                        Content="Compile"
+                        Foreground="White"
                         FontSize="14"
-                        FontWeight="Medium">
+                        FontWeight="Medium"
+                        ButtonBase.Click="MainWindow_Button_Compile_OnClick">
+                </Button>
+
+                <Button Name="Button_Compiling"
+                        Foreground="White"
+                        FontSize="14"
+                        FontWeight="Medium"
+                        IsEnabled="false"
+                        Visibility="Collapsed">
                     <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="Compile"
+                        <TextBlock Text="Compiling"
                                    Margin="0,0,10,0"/>
 
                         <Image Width="15" Height="15"

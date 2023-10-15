@@ -10,7 +10,8 @@ project "CommitChecker"
 	files
 	{
 		"Source/**.cs",
-		"Source/**.xaml"
+		"Source/**.xaml",
+		"Source/Assets/Images/**.png"
 	}
 
 	defines
@@ -37,3 +38,11 @@ project "CommitChecker"
 		"System.Xml.Linq",
 		"WindowsBase"
 	}
+	
+	filter "files:Source/Assets/Images/**.png"
+		buildaction "Resource"
+	filter {}
+	
+	copyCommitCheckerAssetsToBinaryFolder()
+	copyCommitCheckerScriptsToBinaryFolder()
+	copyCommitCheckerToToolsForTheToolsRepoFolder()

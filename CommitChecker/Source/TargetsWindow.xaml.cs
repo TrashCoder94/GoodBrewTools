@@ -23,5 +23,103 @@ namespace CommitChecker
         {
             InitializeComponent();
         }
+
+        private void TargetsWindow_Button_SaveAndClose_Click(object sender, RoutedEventArgs e)
+        {
+            // To the MainWindow somehow?
+            var mainWindow = Application.Current.Windows.OfType<MainWindow>().FirstOrDefault();
+            if (mainWindow != null)
+            {
+                mainWindow.ClearTargetsToCompile();
+
+                // Linux Debug
+                if(Checkbox_Targets_DebugLinux.IsChecked.GetValueOrDefault(false))
+                {
+                    AddTargetToCompileToMainWindow(mainWindow, PlatformData.Linux, PlatformData.Debug);
+                }
+
+                // Linux Release
+                if (Checkbox_Targets_ReleaseLinux.IsChecked.GetValueOrDefault(false))
+                {
+                    AddTargetToCompileToMainWindow(mainWindow, PlatformData.Linux, PlatformData.Release);
+                }
+
+                // Linux Shipping
+                if (Checkbox_Targets_ShippingLinux.IsChecked.GetValueOrDefault(false))
+                {
+                    AddTargetToCompileToMainWindow(mainWindow, PlatformData.Linux, PlatformData.Shipping);
+                }
+
+                // Windows Debug
+                if (Checkbox_Targets_DebugWindows.IsChecked.GetValueOrDefault(false))
+                {
+                    AddTargetToCompileToMainWindow(mainWindow, PlatformData.Windows, PlatformData.Debug);
+                }
+
+                // Windows Release
+                if (Checkbox_Targets_ReleaseWindows.IsChecked.GetValueOrDefault(false))
+                {
+                    AddTargetToCompileToMainWindow(mainWindow, PlatformData.Windows, PlatformData.Release);
+                }
+
+                // Windows Shipping
+                if (Checkbox_Targets_ShippingWindows.IsChecked.GetValueOrDefault(false))
+                {
+                    AddTargetToCompileToMainWindow(mainWindow, PlatformData.Windows, PlatformData.Shipping);
+                }
+            }
+
+            Hide();
+        }
+
+        private void AddTargetToCompileToMainWindow(MainWindow mainWindow, string platformName, string configurationName)
+        {
+            TargetPlatformData newPlatformData = new TargetPlatformData();
+            newPlatformData.platformName = platformName;
+            newPlatformData.configurationName = configurationName;
+            mainWindow.AddTargetToCompile(newPlatformData);
+        }
+
+        private void TargetsWindow_TitleBar_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            if (e.LeftButton == MouseButtonState.Pressed)
+            {
+                DragMove();
+            }
+        }
+
+        private void OnShow()
+        {
+            var mainWindow = Application.Current.Windows.OfType<MainWindow>().FirstOrDefault();
+            if (mainWindow != null)
+            {
+                // Update Linux checkboxes if they were previously ticked
+                Checkbox_Targets_DebugLinux.IsChecked = mainWindow.HasTargetToCompile(PlatformData.Linux, PlatformData.Debug);
+                Checkbox_Targets_ReleaseLinux.IsChecked = mainWindow.HasTargetToCompile(PlatformData.Linux, PlatformData.Release);
+                Checkbox_Targets_ShippingLinux.IsChecked = mainWindow.HasTargetToCompile(PlatformData.Linux, PlatformData.Shipping);
+
+                // Do the same for the Windows checkboxes
+                Checkbox_Targets_DebugWindows.IsChecked = mainWindow.HasTargetToCompile(PlatformData.Windows, PlatformData.Debug);
+                Checkbox_Targets_ReleaseWindows.IsChecked = mainWindow.HasTargetToCompile(PlatformData.Windows, PlatformData.Release);
+                Checkbox_Targets_ShippingWindows.IsChecked = mainWindow.HasTargetToCompile(PlatformData.Windows, PlatformData.Shipping);
+            }
+        }
+
+        private void OnHide()
+        {
+
+        }
+
+        private void TargetsWindow_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            if ((bool)e.NewValue)
+            {
+                OnShow();
+            }
+            else
+            {
+                OnHide();
+            }
+        }
     }
 }
