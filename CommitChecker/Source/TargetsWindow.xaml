@@ -120,6 +120,8 @@
             <Button Name="TargetsWindow_Button_SaveAndClose"
                     Content="Save And Close"
                     Foreground="White"
+                    Width="100"
+                    Height="25"
                     FontSize="14"
                     FontWeight="Medium"
                     ButtonBase.Click="TargetsWindow_Button_SaveAndClose_Click">

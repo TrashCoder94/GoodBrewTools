@@ -107,13 +107,20 @@ namespace CommitChecker
             //    Console.WriteLine("====================================");
             //}
 
-            if (compileProcessErrorOutput != null && compileProcessErrorOutput.Count() > 0)
-            {
-                Console.WriteLine("====================================");
-                Console.WriteLine(platformName + " " + configurationName + " Warning/Errors");
-                Console.WriteLine(compileProcessErrorOutput);
-                Console.WriteLine("====================================");
-            }
+            //if (compileProcessErrorOutput != null && compileProcessErrorOutput.Count() > 0)
+            //{
+                //var mainWindow = Application.Current.Windows.OfType<MainWindow>().FirstOrDefault();
+                //if (mainWindow != null)
+                //{
+                //    mainWindow.warningOrErrorWindow.Show();
+                //    mainWindow.warningOrErrorWindow.TextBlock_WarningOrErrorsBox.Text += compileProcessErrorOutput;
+
+                //    //Console.WriteLine("====================================");
+                //    //Console.WriteLine(platformName + " " + configurationName + " Warning/Errors");
+                //    //Console.WriteLine(compileProcessErrorOutput);
+                //    //Console.WriteLine("====================================");
+                //}
+            //}
 
             process.Close();
             process = null;
@@ -122,6 +129,11 @@ namespace CommitChecker
         public bool IsProcessRunning()
         {
             return process != null;
+        }
+
+        public bool GeneratedAnyWarningsOrErrors()
+        {
+            return (compileProcessErrorOutput != null && compileProcessErrorOutput.Count() > 0);
         }
 
         private void GivePermissionForCompileScripts()
@@ -176,15 +188,19 @@ namespace CommitChecker
     /// </summary>
     public partial class MainWindow : Window
     {
+        public WarningOrErrorWindow warningOrErrorWindow = new WarningOrErrorWindow();
         private TargetsWindow targetsWindow = new TargetsWindow();
         private List<TargetPlatformData> targetsToCompile = new List<TargetPlatformData>();
-        System.Windows.Threading.DispatcherTimer compileTimer = new System.Windows.Threading.DispatcherTimer();
+        private DispatcherTimer compileTimer = new DispatcherTimer();
 
         public MainWindow()
         {
             InitializeComponent();
+
+            // Want to enable this platform/configuration by default
             AddTargetToCompile(PlatformData.Linux, PlatformData.Debug);
 
+            // Setup the timer here, but not starting it straight away, will be started once the user clicks on the "Compile" button.
             compileTimer.Tick += new EventHandler(OnCompileTimerTick);
             compileTimer.Interval = TimeSpan.FromSeconds(1);
         }
@@ -243,20 +259,43 @@ namespace CommitChecker
             }
         }
 
+        private void OnCompilingFinished()
+        {
+            Console.WriteLine("All compiler processes have finished now!");
+
+            Button_Compile.Visibility = Visibility.Visible;
+            Button_Compiling.Visibility = Visibility.Collapsed;
+
+            if (warningOrErrorWindow != null)
+            {
+                string allWarningOrErrorText = "";
+                targetsToCompile.ForEach(target =>
+                {
+                    if (target.GeneratedAnyWarningsOrErrors())
+                    {
+                        allWarningOrErrorText += ("=======================================================\n");
+                        allWarningOrErrorText += (target.platformName + " " + target.configurationName + "\n");
+                        allWarningOrErrorText += ("Generated warning/errors, please fix and recompile.\n");
+                        allWarningOrErrorText += (target.compileProcessErrorOutput);
+                        allWarningOrErrorText += ("=======================================================\n\n");
+                    }
+                });
+
+                if (allWarningOrErrorText.Count() > 0)
+                {
+                    warningOrErrorWindow.Show();
+                    warningOrErrorWindow.TextBlock_WarningOrErrorsBox.Text += allWarningOrErrorText;
+                }
+            }
+        }
+
         private void OnCompileTimerTick(object source, EventArgs e)
         {
             bool haveAllProcessesFinished = !targetsToCompile.Any(target => target.IsProcessRunning() == true);
             if (haveAllProcessesFinished)
             {
-                Console.WriteLine("All compiler processes have finished now!");
-
-                Button_Compile.Visibility = Visibility.Visible;
-                Button_Compiling.Visibility = Visibility.Collapsed;
+                OnCompilingFinished();
                 compileTimer.Stop();
-            }
-            else
-            {
-                // Console.WriteLine("Still compiling...");
             }
         }
 
@@ -266,6 +305,11 @@ namespace CommitChecker
             {
                 Button_Compile.Visibility = Visibility.Collapsed;
                 Button_Compiling.Visibility = Visibility.Visible;
+
+                if (warningOrErrorWindow != null)
+                {
+                    warningOrErrorWindow.TextBlock_WarningOrErrorsBox.Text = "";
+                }
 
                 targetsToCompile.ForEach(target => 
                 {

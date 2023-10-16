@@ -4,7 +4,8 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
-        Title="WarningOrErrorWindow" Height="250" Width="400"
+        Title="WarningOrErrorWindow" 
+        Height="430" Width="600"
         WindowStartupLocation="CenterScreen"
         WindowStyle="None"
         ResizeMode="NoResize"
@@ -12,12 +13,29 @@
 
     <Grid>
         <Grid.RowDefinitions>
+            <RowDefinition Height="25"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
 
         <Grid.ColumnDefinitions>
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
+
+        <Grid Background="#0f0f2D" 
+              Grid.Row="0"
+              Grid.ColumnSpan="8"
+              MouseDown="WarningOrErrorsWindow_TitleBar_MouseDown">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+        </Grid>
 
         <StackPanel Grid.Row="1"
                     Margin="0,10,0,0">
@@ -31,26 +49,45 @@
                                FontWeight="Bold"
                                FontSize="20"/>
                 </StackPanel>
+            </StackPanel>
 
+            <StackPanel>
                 <Border BorderThickness="1" 
                         BorderBrush="White" 
                         Background="#FF424079" 
                         CornerRadius="10"
                         Margin="0,15,0,0"
-                        Width="300"
-                        Height="125">
-                    <TextBlock Name="WarningOrErrorsBox"
-                               TextWrapping="Wrap"/>
+                        Width="500"
+                        Height="300">
+                    <ScrollViewer>
+                        <TextBlock Name="TextBlock_WarningOrErrorsBox"
+                               TextWrapping="Wrap"
+                               />
+                    </ScrollViewer>
                 </Border>
             </StackPanel>
-
+            
             <StackPanel Orientation="Horizontal"
                         Margin="0,15,0,0"
                         HorizontalAlignment="Center">
-                <Button Content="Close"
+                <Button Content="Copy To Clipboard"
+                        Width="130"
+                        Height="25"
                         Foreground="White"
                         FontSize="14"
-                        FontWeight="Medium">
+                        FontWeight="Medium"
+                        Margin="0,0,120,0"
+                        Click="WarningOrErrorWindow_Button_CopyToClipboard_Clicked"
+                        MouseLeave="WarningOrErrorWindow_Button_CopyToClipboard_MouseLeave">
+                </Button>
+
+                <Button Content="Close"
+                        Foreground="White"
+                        Width="100"
+                        Height="25"
+                        FontSize="14"
+                        FontWeight="Medium"
+                        Click="WarningOrErrorWindow_Button_Close_Clicked">
                 </Button>
             </StackPanel>
 
