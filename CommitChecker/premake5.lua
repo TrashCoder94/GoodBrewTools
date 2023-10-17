@@ -45,4 +45,4 @@ project "CommitChecker"
 	
 	copyCommitCheckerAssetsToBinaryFolder()
 	copyCommitCheckerScriptsToBinaryFolder()
-	copyCommitCheckerToToolsForTheToolsRepoFolder()
+	--copyCommitCheckerToToolsForTheToolsRepoFolder()

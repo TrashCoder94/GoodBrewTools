@@ -38,14 +38,9 @@ namespace CommitChecker
             FindCompilingScriptPathForPlatform();
             Debug.Assert((compilingScriptPath != null && compilingScriptPath.Count() > 0), "Compiling script for platform " + platformName + " & configuration " + configurationName + " doesn't exist?");
 
-            // TODO: Check the actual script file (.bat/.sh) and work out where it's best to update the working directory in there...
-            // E.g. cd .. cd ..?
-            // Might not work for the local test as I'd need to do that 3 times instead of 2 if it's put into the tools folder
-            // Maybe I need to set the working directory via a command line?
-            // Or here? Think.
-
             process = new Process();
             process.EnableRaisingEvents = true;
+            process.StartInfo.CreateNoWindow = true;
             process.StartInfo.RedirectStandardOutput = true;
             process.StartInfo.RedirectStandardError = true;
             process.StartInfo.UseShellExecute = false;
@@ -54,11 +49,11 @@ namespace CommitChecker
             if (platformName == PlatformData.Windows)
             {
                 process.StartInfo.FileName = "cmd.exe";
-                process.StartInfo.Arguments = compilingScriptPath;
+                process.StartInfo.Arguments = "/c " + compilingScriptPath;
             }
             // Linux - use the WSL instead to run the build script.
             else if (platformName == PlatformData.Linux)
-            { 
+            {
                 process.StartInfo.FileName = "powershell.exe";
                 process.StartInfo.Arguments = @"-executionpolicy unrestricted wsl . " + compilingScriptPath;
             }
@@ -168,8 +163,12 @@ namespace CommitChecker
 
                 Debug.Assert(currentPath != null, "No compiling script found for platform " + platformName + " & configuration " + configurationName);
 
+                if (platformName == PlatformData.Windows)
+                {
+                    compilingScriptPath = currentPath;
+                }
                 // Need to replace any backslashes with forward slashes
-                if (platformName == PlatformData.Linux)
+                else if (platformName == PlatformData.Linux)
                 {
                     string updatedScriptPath = currentPath.Replace("\\", "/");
                     compilingScriptPath = updatedScriptPath;
