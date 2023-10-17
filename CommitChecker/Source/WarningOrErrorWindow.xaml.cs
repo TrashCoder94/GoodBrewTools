@@ -33,7 +33,7 @@ namespace CommitChecker
         private void WarningOrErrorWindow_Button_Close_Clicked(object sender, RoutedEventArgs e)
         {
             tooltip.IsOpen = false;
-            Close();
+            Hide();
         }
 
         private void WarningOrErrorsWindow_TitleBar_MouseDown(object sender, MouseButtonEventArgs e)
