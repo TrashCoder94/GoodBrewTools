@@ -116,15 +116,6 @@ function copyCommitCheckerScriptsToBinaryFolder()
 	filter {}
 end
 
-function copyCommitCheckerToToolsForTheToolsRepoFolder()
-	filter { "system:windows" }
-		postbuildcommands
-		{
-			"{COPY} $(TargetDir) %{wks.location}/ToolsForTheToolsRepo/CommitChecker/"
-		}
-	filter {}
-end
-
 group "Dependencies"
 	include "ThirdParty/premake"
 group ""
