@@ -225,21 +225,7 @@ namespace CommitChecker
 
         public bool HasTargetToCompile(string platformName, string configurationName)
         {
-            bool hasTarget = false;
-
-            targetsToCompile.ForEach(target => 
-            {
-                if (hasTarget)
-                {
-                    return;
-                }
-
-                if(target.platformName == platformName && target.configurationName == configurationName)
-                {
-                    hasTarget = true;
-                }
-            });
-
+            bool hasTarget = targetsToCompile.Any(target => (target.platformName == platformName && target.configurationName == configurationName));
             return hasTarget;
         }
 
