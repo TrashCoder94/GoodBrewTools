@@ -81,7 +81,7 @@
             </StackPanel>
 
             <StackPanel Orientation="Horizontal"
-                        Margin="0,15,0,0"
+                        Margin="40,15,0,0"
                         HorizontalAlignment="Center">
                 <Button Content="Targets"
                         Foreground="White"
@@ -100,6 +100,7 @@
                         Height="25"
                         FontSize="14"
                         FontWeight="Medium"
+                        Margin="10,0,10,0"
                         ButtonBase.Click="MainWindow_Button_Compile_OnClick">
                 </Button>
 
@@ -123,6 +124,9 @@
                         </Image>
                     </StackPanel>
                 </Button>
+
+                <Image  Name="Image_CompileResults"
+                        Width="25" Height="25"/>
             </StackPanel>
 
             <StackPanel Orientation="Horizontal"

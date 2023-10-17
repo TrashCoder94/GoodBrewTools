@@ -17,6 +17,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Threading;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace CommitChecker
 {
@@ -93,30 +94,6 @@ namespace CommitChecker
         private void Process_Exited(object sender, EventArgs e)
         {
             Console.WriteLine(platformName + " " + configurationName + " ExitCode: {0}", process.ExitCode);
-
-            //if (compileProcessFullOutput != null && compileProcessFullOutput.Count() > 0)
-            //{
-            //    Console.WriteLine("====================================");
-            //    Console.WriteLine(platformName + " " + configurationName + " Output");
-            //    Console.WriteLine(compileProcessFullOutput);
-            //    Console.WriteLine("====================================");
-            //}
-
-            //if (compileProcessErrorOutput != null && compileProcessErrorOutput.Count() > 0)
-            //{
-                //var mainWindow = Application.Current.Windows.OfType<MainWindow>().FirstOrDefault();
-                //if (mainWindow != null)
-                //{
-                //    mainWindow.warningOrErrorWindow.Show();
-                //    mainWindow.warningOrErrorWindow.TextBlock_WarningOrErrorsBox.Text += compileProcessErrorOutput;
-
-                //    //Console.WriteLine("====================================");
-                //    //Console.WriteLine(platformName + " " + configurationName + " Warning/Errors");
-                //    //Console.WriteLine(compileProcessErrorOutput);
-                //    //Console.WriteLine("====================================");
-                //}
-            //}
-
             process.Close();
             process = null;
         }
@@ -191,6 +168,9 @@ namespace CommitChecker
         private TargetsWindow targetsWindow = new TargetsWindow();
         private List<TargetPlatformData> targetsToCompile = new List<TargetPlatformData>();
         private DispatcherTimer compileTimer = new DispatcherTimer();
+        private BitmapImage greenTickImage = new BitmapImage(new Uri(@"Assets/Images/GreenTick.png", UriKind.Relative));
+        private BitmapImage redCrossImage = new BitmapImage(new Uri(@"Assets/Images/RedCross.png", UriKind.Relative));
+        private bool compileSucceeded = false;
 
         public MainWindow()
         {
@@ -244,6 +224,32 @@ namespace CommitChecker
             }
         }
 
+        private void StartCompiling()
+        {
+            if (targetsToCompile.Count > 0)
+            {
+                Image_CompileResults.Visibility = Visibility.Hidden;
+                Button_Compile.Visibility = Visibility.Collapsed;
+                Button_Compiling.Visibility = Visibility.Visible;
+
+                if (warningOrErrorWindow != null)
+                {
+                    warningOrErrorWindow.TextBlock_WarningOrErrorsBox.Text = "";
+                }
+
+                targetsToCompile.ForEach(target =>
+                {
+                    target.StartCompilingProcess();
+                });
+
+                compileTimer.Start();
+            }
+            else
+            {
+                MessageBox.Show("Please select at least 1 platform/configuration from the Targets window.");
+            }
+        }
+
         private void OnCompilingFinished()
         {
             Console.WriteLine("All compiler processes have finished now!");
@@ -270,8 +276,24 @@ namespace CommitChecker
                 {
                     warningOrErrorWindow.Show();
                     warningOrErrorWindow.TextBlock_WarningOrErrorsBox.Text += allWarningOrErrorText;
+                    compileSucceeded = false;
+                }
+                else
+                {
+                    compileSucceeded = true;
                 }
             }
+
+            if (compileSucceeded)
+            {
+                Image_CompileResults.Source = greenTickImage;
+            }
+            else
+            {
+                Image_CompileResults.Source = redCrossImage;
+            }
+
+            Image_CompileResults.Visibility = Visibility.Visible;
         }
 
         private void OnCompileTimerTick(object source, EventArgs e)
@@ -286,27 +308,7 @@ namespace CommitChecker
 
         private void MainWindow_Button_Compile_OnClick(object sender, RoutedEventArgs e)
         {
-            if (targetsToCompile.Count > 0)
-            {
-                Button_Compile.Visibility = Visibility.Collapsed;
-                Button_Compiling.Visibility = Visibility.Visible;
-
-                if (warningOrErrorWindow != null)
-                {
-                    warningOrErrorWindow.TextBlock_WarningOrErrorsBox.Text = "";
-                }
-
-                targetsToCompile.ForEach(target => 
-                {
-                    target.StartCompilingProcess();
-                });
-
-                compileTimer.Start();
-            }
-            else
-            {
-                MessageBox.Show("Please select at least 1 platform/configuration from the Targets window.");
-            }
+            StartCompiling();
         }
     }
 }
