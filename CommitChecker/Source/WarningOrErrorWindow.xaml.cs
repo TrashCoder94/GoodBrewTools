@@ -54,5 +54,12 @@ namespace CommitChecker
         {
             tooltip.IsOpen = false;
         }
+
+        private void WarningOrErrorWindow_Button_Close_OnClick(object sender, RoutedEventArgs e)
+        {
+            // Since this window can be shown/hidden whilst MainWindow is active.
+            // So only Hide this window NOT close it.
+            Hide();
+        }
     }
 }

@@ -121,5 +121,12 @@ namespace CommitChecker
                 OnHide();
             }
         }
+
+        private void TargetWindow_Button_Close_OnClick(object sender, RoutedEventArgs e)
+        {
+            // Since this window can be shown/hidden whilst MainWindow is active.
+            // So only Hide this window NOT close it.
+            Hide();
+        }
     }
 }

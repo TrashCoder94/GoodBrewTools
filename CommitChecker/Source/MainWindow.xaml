@@ -32,6 +32,11 @@
                 <ColumnDefinition/>
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
+
+            <Button Name="Button_Close"
+                    Content="X"
+                    Grid.Column="7"
+                    Click="MainWindow_Button_Close_OnClick"/>
         </Grid>
 
         <StackPanel Grid.Row="1"

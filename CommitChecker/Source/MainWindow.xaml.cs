@@ -354,5 +354,10 @@ namespace CommitChecker
         {
             CommitChanges();
         }
+
+        private void MainWindow_Button_Close_OnClick(object sender, RoutedEventArgs e)
+        {
+            Close();
+        }
     }
 }
