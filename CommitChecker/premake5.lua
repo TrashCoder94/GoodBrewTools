@@ -3,6 +3,7 @@ project "CommitChecker"
 	language "C#"
 	cppdialect "C++17"
 	flags { "WPF" }
+	icon "Source/Assets/Images/CommitCheckerIcon.ico"
 
 	targetdir ("%{wks.location}/Binaries/" .. outputdir .. "/%{prj.name}")
 	objdir ("%{wks.location}/Intermediate/" .. outputdir .. "/%{prj.name}")
@@ -11,7 +12,8 @@ project "CommitChecker"
 	{
 		"Source/**.cs",
 		"Source/**.xaml",
-		"Source/Assets/Images/**.png"
+		"Source/Assets/Images/**.png",
+		"Source/Assets/Images/**.ico"
 	}
 
 	defines
