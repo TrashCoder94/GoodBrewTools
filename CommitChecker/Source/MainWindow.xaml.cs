@@ -348,6 +348,7 @@ namespace CommitChecker
         {
             // The commit has gone through, close down everything now!
             Close();
+            System.Windows.Application.Current.Shutdown();
         }
 
         private void MainWindow_Button_Commit_OnClick(object sender, RoutedEventArgs e)
@@ -358,6 +359,7 @@ namespace CommitChecker
         private void MainWindow_Button_Close_OnClick(object sender, RoutedEventArgs e)
         {
             Close();
+            System.Windows.Application.Current.Shutdown();
         }
     }
 }

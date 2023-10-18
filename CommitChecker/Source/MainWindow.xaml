@@ -36,7 +36,9 @@
             <Button Name="Button_Close"
                     Content="X"
                     Grid.Column="7"
-                    Click="MainWindow_Button_Close_OnClick"/>
+                    Style="{StaticResource CloseButtonStyle}"
+                    Click="MainWindow_Button_Close_OnClick">
+            </Button>
         </Grid>
 
         <StackPanel Grid.Row="1"
@@ -95,6 +97,7 @@
                         FontSize="14"
                         FontWeight="Medium"
                         Margin="0,0,20,0"
+                        Style="{StaticResource BaseButtonStyle}"
                         ButtonBase.Click="MainWindow_Button_Targets_OnClick">
                 </Button>
 
@@ -106,6 +109,7 @@
                         FontSize="14"
                         FontWeight="Medium"
                         Margin="10,0,10,0"
+                        Style="{StaticResource BaseButtonStyle}"
                         ButtonBase.Click="MainWindow_Button_Compile_OnClick">
                 </Button>
 
@@ -116,6 +120,7 @@
                         FontSize="14"
                         FontWeight="Medium"
                         IsEnabled="false"
+                        Style="{StaticResource BaseButtonStyle}"
                         Visibility="Collapsed">
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Text="Compiling"
@@ -145,6 +150,7 @@
                         FontSize="14"
                         FontWeight="Medium"
                         IsEnabled="False"
+                        Style="{StaticResource BaseButtonStyle}"
                         Click="MainWindow_Button_Commit_OnClick">
                 </Button>
 
@@ -155,6 +161,7 @@
                         FontSize="14"
                         FontWeight="Medium"
                         IsEnabled="false"
+                        Style="{StaticResource BaseButtonStyle}"
                         Visibility="Collapsed">
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Text="Committing..."

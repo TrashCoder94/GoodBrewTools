@@ -42,6 +42,7 @@
             <Button Name="Button_Close"
                     Content="X"
                     Grid.Column="7"
+                    Style="{StaticResource CloseButtonStyle}"
                     Click="TargetWindow_Button_Close_OnClick"/>
         </Grid>
 
@@ -140,6 +141,7 @@
                     Height="25"
                     FontSize="14"
                     FontWeight="Medium"
+                    Style="{StaticResource BaseButtonStyle}"
                     ButtonBase.Click="TargetsWindow_Button_SaveAndClose_Click">
             </Button>
         </StackPanel>
