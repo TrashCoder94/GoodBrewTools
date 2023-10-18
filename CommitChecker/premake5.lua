@@ -1,5 +1,5 @@
 project "CommitChecker"
-	kind "ConsoleApp"
+	kind "WindowedApp"
 	language "C#"
 	cppdialect "C++17"
 	flags { "WPF" }
