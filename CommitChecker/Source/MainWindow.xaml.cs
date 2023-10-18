@@ -286,14 +286,26 @@ namespace CommitChecker
 
             if (compileSucceeded)
             {
-                Image_CompileResults.Source = greenTickImage;
+                OnCompilingSucceeded();
             }
             else
             {
-                Image_CompileResults.Source = redCrossImage;
+                OnCompilingFailed();
             }
 
             Image_CompileResults.Visibility = Visibility.Visible;
+        }
+
+        private void OnCompilingSucceeded()
+        {
+            Image_CompileResults.Source = greenTickImage;
+            Button_Commit.IsEnabled = true;
+        }
+
+        private void OnCompilingFailed()
+        {
+            Image_CompileResults.Source = redCrossImage;
+            Button_Commit.IsEnabled = false;
         }
 
         private void OnCompileTimerTick(object source, EventArgs e)
@@ -309,6 +321,38 @@ namespace CommitChecker
         private void MainWindow_Button_Compile_OnClick(object sender, RoutedEventArgs e)
         {
             StartCompiling();
+        }
+
+        private void CommitChanges()
+        {
+            Button_Commit.Visibility = Visibility.Collapsed;
+            Button_Committing.Visibility = Visibility.Visible;
+
+            Process process = new Process();
+            process.EnableRaisingEvents = true;
+            process.StartInfo.CreateNoWindow = true;
+            process.StartInfo.RedirectStandardOutput = true;
+            process.StartInfo.RedirectStandardError = true;
+            process.StartInfo.UseShellExecute = false;
+
+            process.StartInfo.FileName = "cmd.exe";
+            process.StartInfo.Arguments = "/c CommitChecker-Windows-Commit.bat \"" + TextBox_CommitTitle.Text + "\" \"" + TextBox_CommitDescription.Text + "\"";
+
+            bool processStartedSuccessfully = process.Start();
+            Debug.Assert(processStartedSuccessfully, "Failed to start the commit process. \nIs git installed? Is there a weird character in the title or description field?");
+
+            process.Exited += CommitProcess_Exited;
+        }
+
+        private void CommitProcess_Exited(object sender, EventArgs e)
+        {
+            // The commit has gone through, close down everything now!
+            Close();
+        }
+
+        private void MainWindow_Button_Commit_OnClick(object sender, RoutedEventArgs e)
+        {
+            CommitChanges();
         }
     }
 }

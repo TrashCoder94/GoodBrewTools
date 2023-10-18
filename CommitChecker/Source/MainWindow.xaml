@@ -54,7 +54,7 @@
                                HorizontalAlignment="Center"
                                />
 
-                    <TextBox Name="CommitTitle"
+                    <TextBox Name="TextBox_CommitTitle"
                              Width="200" MaxLength="100" 
                              Foreground="White"
                              Background="#FF424079"
@@ -68,7 +68,7 @@
                                Margin="0,15,0,0"
                                HorizontalAlignment="Center"
                                />
-                    <TextBox Name="CommitDescription"
+                    <TextBox Name="TextBox_CommitDescription"
                              Width="250" Height="150"
                              TextWrapping="Wrap"
                              AcceptsReturn="True"
@@ -132,13 +132,36 @@
             <StackPanel Orientation="Horizontal"
                         Margin="0,15,0,0"
                         HorizontalAlignment="Center">
-                <Button Content="Commit"
+                <Button Name="Button_Commit"
+                        Content="Commit"
                         Foreground="White"
                         Width="100"
                         Height="25"
                         FontSize="14"
                         FontWeight="Medium"
-                        IsEnabled="False">
+                        IsEnabled="False"
+                        Click="MainWindow_Button_Commit_OnClick">
+                </Button>
+
+                <Button Name="Button_Committing"
+                        Foreground="White"
+                        Width="120"
+                        Height="25"
+                        FontSize="14"
+                        FontWeight="Medium"
+                        IsEnabled="false"
+                        Visibility="Collapsed">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="Committing..."
+                                   Margin="4,0,5,0"/>
+
+                        <Image Width="15" Height="15"
+                               Source="Assets\Images\LoadingCog.png" 
+                               HorizontalAlignment="Center" 
+                               VerticalAlignment="Center"
+                               Style="{StaticResource Spinner}">
+                        </Image>
+                    </StackPanel>
                 </Button>
             </StackPanel>
             
