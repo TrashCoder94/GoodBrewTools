@@ -7,8 +7,11 @@
 ## Prerequisites
 
 ### Windows
-Download the NuGet executable from here: https://www.nuget.org/downloads (latest version should be fine).
-Make sure the folder location of the NuGet executable is added to your PATH environment variable.
+This is for the CommitChecker, on Windows, this uses the WSL to compile local changes in a Linux environment.
+Download the Windows Subsystem for Linux from the Microsoft Store: https://www.microsoft.com/store/productid/9P9TQF7MRM4R?ocid=pdpshare
+Follow the instructions here to install the system and a distribution: https://learn.microsoft.com/en-us/windows/wsl/installs
+
+Place the CommitChecker binaries inside `Tools/CommitChecker` inside of your main repository folder.
 
 ### Linux
 ```
