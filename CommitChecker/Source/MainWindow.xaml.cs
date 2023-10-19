@@ -357,6 +357,8 @@ namespace CommitChecker
 
             bool processStartedSuccessfully = commitProcess.Start();
             Debug.Assert(processStartedSuccessfully, "Failed to start the commit process. \nIs git installed? Is there a weird character in the title or description field?");
+
+            commitTimer.Start();
         }
 
         private void CommitProcess_Exited(object sender, EventArgs e)
