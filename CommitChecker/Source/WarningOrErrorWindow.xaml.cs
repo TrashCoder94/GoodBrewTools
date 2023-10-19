@@ -19,7 +19,7 @@ namespace CommitChecker
     /// </summary>
     public partial class WarningOrErrorWindow : Window
     {
-        private ToolTip tooltip = new ToolTip();
+        private readonly ToolTip tooltip = new ToolTip();
 
         public WarningOrErrorWindow()
         {

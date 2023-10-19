@@ -11,21 +11,13 @@ namespace CommitChecker
         private static readonly PlatformData instance = new PlatformData();
         
         // Platforms
-        public const string Linux = "Linux";
-        public const string Windows = "Windows";
+        public static readonly string Linux = "Linux";
+        public static readonly string Windows = "Windows";
 
         // Configurations
-        public const string Debug = "Debug";
-        public const string Release = "Release";
-        public const string Shipping = "Shipping";
-
-        static PlatformData()
-        {
-        }
-
-        private PlatformData()
-        {
-        }
+        public static readonly string Debug = "Debug";
+        public static readonly string Release = "Release";
+        public static readonly string Shipping = "Shipping";
 
         public static PlatformData Instance
         {

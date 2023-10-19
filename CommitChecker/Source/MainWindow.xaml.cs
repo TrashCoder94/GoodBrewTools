@@ -23,16 +23,28 @@ namespace CommitChecker
 {
     public class TargetPlatformData
     {
-        public string platformName = null;
-        public string configurationName = null;
+        private string platformName = null;
+        public string PlatformName
+        {
+            get { return platformName; }
+            set { platformName = value; }
+        }
 
-        public Process process = null;
-        public string compilingScriptPath = null;
-        public string compileProcessFullOutput = null;
-        public string compileProcessErrorOutput = null;
+        private string configurationName = null;
+        public string ConfigurationName
+        {
+            get { return configurationName; }
+            set { configurationName = value; }
+        }
 
-        public TargetPlatformData() 
-        {}
+        private Process process = null;
+        private string compilingScriptPath = null;
+        private string compileProcessFullOutput;
+        private string compileProcessErrorOutput;
+        public string ErrorOutput
+        {
+            get { return compileProcessErrorOutput; }
+        }
 
         public void StartCompilingProcess()
         {
@@ -117,13 +129,13 @@ namespace CommitChecker
             process.StartInfo.UseShellExecute = false;
             process.StartInfo.FileName = "powershell.exe";
             process.StartInfo.Arguments = @"-executionpolicy unrestricted wsl chmod +x " + compilingScriptPath;
-            process.StartInfo.WorkingDirectory = System.AppDomain.CurrentDomain.BaseDirectory.ToString();
+            process.StartInfo.WorkingDirectory = System.AppDomain.CurrentDomain.BaseDirectory;
 
             bool processStartedSuccessfully = process.Start();
             Debug.Assert(processStartedSuccessfully, "Failed to start " + platformName + " compile process. \nPlease check the arguments!");
         }
 
-        private string FindCompilingScriptPathForPlatform()
+        private void FindCompilingScriptPathForPlatform()
         {
             if (compilingScriptPath == null)
             {
@@ -154,8 +166,6 @@ namespace CommitChecker
                     GivePermissionForCompileScripts();
                 }
             }
-
-            return compilingScriptPath;
         }
     }
 
@@ -165,20 +175,20 @@ namespace CommitChecker
     public partial class MainWindow : Window
     {
         // Window variables
-        public WarningOrErrorWindow warningOrErrorWindow = new WarningOrErrorWindow();
-        private TargetsWindow targetsWindow = new TargetsWindow();
+        private readonly WarningOrErrorWindow warningOrErrorWindow = new WarningOrErrorWindow();
+        private readonly TargetsWindow targetsWindow = new TargetsWindow();
         
         // Compiling variables
-        private List<TargetPlatformData> targetsToCompile = new List<TargetPlatformData>();
-        private DispatcherTimer compileTimer = new DispatcherTimer();
-        private BitmapImage greenTickImage = new BitmapImage(new Uri(@"Assets/Images/GreenTick.png", UriKind.Relative));
-        private BitmapImage redCrossImage = new BitmapImage(new Uri(@"Assets/Images/RedCross.png", UriKind.Relative));
+        private readonly List<TargetPlatformData> targetsToCompile = new List<TargetPlatformData>();
+        private readonly DispatcherTimer compileTimer = new DispatcherTimer();
+        private readonly BitmapImage greenTickImage = new BitmapImage(new Uri(@"Assets/Images/GreenTick.png", UriKind.Relative));
+        private readonly BitmapImage redCrossImage = new BitmapImage(new Uri(@"Assets/Images/RedCross.png", UriKind.Relative));
         private bool compileSucceeded = false;
 
         // Commit variables
-        private Process commitProcess = new Process();
-        private DispatcherTimer commitTimer = new DispatcherTimer();
-        private DispatcherTimer delayAfterCommitHasGoneThroughTimer = new DispatcherTimer();
+        private readonly Process commitProcess = new Process();
+        private readonly DispatcherTimer commitTimer = new DispatcherTimer();
+        private readonly DispatcherTimer delayAfterCommitHasGoneThroughTimer = new DispatcherTimer();
         private bool commitProcessSuccessful = false;
         private bool commitProcessFinished = false;
 
@@ -217,8 +227,8 @@ namespace CommitChecker
         public void AddTargetToCompile(string platformName, string configuration)
         {
             TargetPlatformData platformData = new TargetPlatformData();
-            platformData.platformName = platformName;
-            platformData.configurationName = configuration; 
+            platformData.PlatformName = platformName;
+            platformData.ConfigurationName = configuration; 
             targetsToCompile.Add(platformData);
         }
 
@@ -229,7 +239,7 @@ namespace CommitChecker
 
         public bool HasTargetToCompile(string platformName, string configurationName)
         {
-            bool hasTarget = targetsToCompile.Any(target => (target.platformName == platformName && target.configurationName == configurationName));
+            bool hasTarget = targetsToCompile.Any(target => (target.PlatformName == platformName && target.ConfigurationName == configurationName));
             return hasTarget;
         }
 
@@ -290,9 +300,9 @@ namespace CommitChecker
                     if (target.GeneratedAnyWarningsOrErrors())
                     {
                         allWarningOrErrorText += ("=======================================================\n");
-                        allWarningOrErrorText += (target.platformName + " " + target.configurationName + "\n");
+                        allWarningOrErrorText += (target.PlatformName + " " + target.ConfigurationName + "\n");
                         allWarningOrErrorText += ("Generated warning/errors, please fix and recompile.\n");
-                        allWarningOrErrorText += (target.compileProcessErrorOutput);
+                        allWarningOrErrorText += (target.ErrorOutput);
                         allWarningOrErrorText += ("=======================================================\n\n");
                     }
                 });

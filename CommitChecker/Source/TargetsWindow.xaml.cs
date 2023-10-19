@@ -75,8 +75,8 @@ namespace CommitChecker
         private void AddTargetToCompileToMainWindow(MainWindow mainWindow, string platformName, string configurationName)
         {
             TargetPlatformData newPlatformData = new TargetPlatformData();
-            newPlatformData.platformName = platformName;
-            newPlatformData.configurationName = configurationName;
+            newPlatformData.PlatformName = platformName;
+            newPlatformData.ConfigurationName = configurationName;
             mainWindow.AddTargetToCompile(newPlatformData);
         }
 
@@ -105,20 +105,11 @@ namespace CommitChecker
             }
         }
 
-        private void OnHide()
-        {
-
-        }
-
         private void TargetsWindow_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
             if ((bool)e.NewValue)
             {
                 OnShow();
-            }
-            else
-            {
-                OnHide();
             }
         }
 
