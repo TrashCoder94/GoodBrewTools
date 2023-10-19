@@ -164,13 +164,23 @@ namespace CommitChecker
     /// </summary>
     public partial class MainWindow : Window
     {
+        // Window variables
         public WarningOrErrorWindow warningOrErrorWindow = new WarningOrErrorWindow();
         private TargetsWindow targetsWindow = new TargetsWindow();
+        
+        // Compiling variables
         private List<TargetPlatformData> targetsToCompile = new List<TargetPlatformData>();
         private DispatcherTimer compileTimer = new DispatcherTimer();
         private BitmapImage greenTickImage = new BitmapImage(new Uri(@"Assets/Images/GreenTick.png", UriKind.Relative));
         private BitmapImage redCrossImage = new BitmapImage(new Uri(@"Assets/Images/RedCross.png", UriKind.Relative));
         private bool compileSucceeded = false;
+
+        // Commit variables
+        private Process commitProcess = new Process();
+        private DispatcherTimer commitTimer = new DispatcherTimer();
+        private DispatcherTimer delayAfterCommitHasGoneThroughTimer = new DispatcherTimer();
+        private bool commitProcessSuccessful = false;
+        private bool commitProcessFinished = false;
 
         public MainWindow()
         {
@@ -180,8 +190,23 @@ namespace CommitChecker
             AddTargetToCompile(PlatformData.Linux, PlatformData.Debug);
 
             // Setup the timer here, but not starting it straight away, will be started once the user clicks on the "Compile" button.
-            compileTimer.Tick += new EventHandler(OnCompileTimerTick);
+            compileTimer.Tick += OnCompileTimerTick;
             compileTimer.Interval = TimeSpan.FromSeconds(1);
+
+            commitTimer.Tick += CommitTimer_Tick;
+            commitTimer.Interval = TimeSpan.FromSeconds(1);
+
+            delayAfterCommitHasGoneThroughTimer.Tick += DelayAfterCommitHasGoneThroughTimer_Tick;
+            delayAfterCommitHasGoneThroughTimer.Interval = TimeSpan.FromSeconds(2);
+
+            commitProcess.EnableRaisingEvents = true;
+            commitProcess.StartInfo.CreateNoWindow = true;
+            commitProcess.StartInfo.RedirectStandardOutput = true;
+            commitProcess.StartInfo.RedirectStandardError = true;
+            commitProcess.StartInfo.UseShellExecute = false;
+
+            commitProcess.StartInfo.FileName = "cmd.exe";
+            commitProcess.Exited += CommitProcess_Exited;
         }
 
         public void ClearTargetsToCompile()
@@ -328,32 +353,71 @@ namespace CommitChecker
             Button_Commit.Visibility = Visibility.Collapsed;
             Button_Committing.Visibility = Visibility.Visible;
 
-            Process process = new Process();
-            process.EnableRaisingEvents = true;
-            process.StartInfo.CreateNoWindow = true;
-            process.StartInfo.RedirectStandardOutput = true;
-            process.StartInfo.RedirectStandardError = true;
-            process.StartInfo.UseShellExecute = false;
+            commitProcess.StartInfo.Arguments = "/c CommitChecker-Windows-Commit.bat \"" + TextBox_CommitTitle.Text + "\" \"" + TextBox_CommitDescription.Text + "\"";
 
-            process.StartInfo.FileName = "cmd.exe";
-            process.StartInfo.Arguments = "/c CommitChecker-Windows-Commit.bat \"" + TextBox_CommitTitle.Text + "\" \"" + TextBox_CommitDescription.Text + "\"";
-
-            bool processStartedSuccessfully = process.Start();
+            bool processStartedSuccessfully = commitProcess.Start();
             Debug.Assert(processStartedSuccessfully, "Failed to start the commit process. \nIs git installed? Is there a weird character in the title or description field?");
-
-            process.Exited += CommitProcess_Exited;
         }
 
         private void CommitProcess_Exited(object sender, EventArgs e)
         {
-            // The commit has gone through, close down everything now!
-            Close();
-            System.Windows.Application.Current.Shutdown();
+            commitProcessSuccessful = (commitProcess.ExitCode == 0);
+            commitProcessFinished = true;
+        }
+
+        private void CommitTimer_Tick(object sender, EventArgs e)
+        {
+            if (commitProcessFinished)
+            {
+                // Can stop this timer now
+                commitTimer.Stop();
+
+                // Display the commit button again to show that the "committing" is done and back to regular UI
+                Button_Commit.Visibility = Visibility.Visible;
+                Button_Committing.Visibility = Visibility.Collapsed;
+
+                if (commitProcessSuccessful)
+                {
+                    // Disable the commit button, this app will be closing down in a couple of seconds
+                    Button_Commit.IsEnabled = false;
+
+                    // Green tick to let the user know their commit was successfully pushed to the repo.
+                    Image_CommitResults.Source = greenTickImage;
+
+                    // Can start the timer to close down the application now the commit process has finished.
+                    delayAfterCommitHasGoneThroughTimer.Start();
+                }
+                else
+                {
+                    // Re-enable the commit button so the user can try again.
+                    Button_Commit.IsEnabled = true;
+
+                    // Something went wrong with the commit process?
+                    // Perhaps the user needs to sign in or grant access through GitHub first?
+                    // Or no internet connection? Not sure, either way, let them know _something_ went wrong at least...
+                    Image_CommitResults.Source = redCrossImage;
+
+                    // Reset the flag here because the user might need to try another commit since this one failed for whatever reason.
+                    commitProcessFinished = false;
+                }
+
+                // Always show what the results were at this point.
+                Image_CommitResults.Visibility = Visibility.Visible;
+            }
         }
 
         private void MainWindow_Button_Commit_OnClick(object sender, RoutedEventArgs e)
         {
             CommitChanges();
+        }
+
+        private void DelayAfterCommitHasGoneThroughTimer_Tick(object sender, EventArgs e)
+        {
+            delayAfterCommitHasGoneThroughTimer.Stop();
+
+            // The commit has gone through, close down everything now!
+            Close();
+            System.Windows.Application.Current.Shutdown();
         }
 
         private void MainWindow_Button_Close_OnClick(object sender, RoutedEventArgs e)

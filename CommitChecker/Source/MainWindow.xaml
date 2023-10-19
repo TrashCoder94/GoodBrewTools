@@ -150,6 +150,7 @@
                         FontSize="14"
                         FontWeight="Medium"
                         IsEnabled="False"
+                        Margin="45,0,0,0"
                         Style="{StaticResource BaseButtonStyle}"
                         Click="MainWindow_Button_Commit_OnClick">
                 </Button>
@@ -161,6 +162,7 @@
                         FontSize="14"
                         FontWeight="Medium"
                         IsEnabled="false"
+                        Margin="45,0,0,0"
                         Style="{StaticResource BaseButtonStyle}"
                         Visibility="Collapsed">
                     <StackPanel Orientation="Horizontal">
@@ -175,6 +177,10 @@
                         </Image>
                     </StackPanel>
                 </Button>
+
+                <Image  Name="Image_CommitResults"
+                        Margin="20,0,0,0"
+                        Width="25" Height="25"/>
             </StackPanel>
             
         </StackPanel>
