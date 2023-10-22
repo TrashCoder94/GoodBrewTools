@@ -74,6 +74,7 @@ namespace CommitChecker
 
         private void AddTargetToCompileToMainWindow(MainWindow mainWindow, string platformName, string configurationName)
         {
+            // Dummy comment to commit something for the README instructions
             TargetPlatformData newPlatformData = new TargetPlatformData();
             newPlatformData.PlatformName = platformName;
             newPlatformData.ConfigurationName = configurationName;
