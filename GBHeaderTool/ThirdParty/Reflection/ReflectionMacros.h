@@ -1,6 +1,10 @@
 #pragma once
 
+#include "Macros.h"
 #include "TypeDescriptorStruct.h"
+
+DISABLE_WARNING_PUSH
+DISABLE_WARNING_OFFSET_OF_CONDITIONALLY_SUPPORTED
 
 #define REFLECTION_MACRO_STRINGIFY(x) #x
 
@@ -23,3 +27,5 @@
 #define REFLECT_STRUCT_END() \
         }; \
     }
+
+DISABLE_WARNING_POP

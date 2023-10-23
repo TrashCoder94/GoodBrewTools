@@ -54,5 +54,3 @@ namespace GB
 
 	static const std::string AUTO_GENERATED_FILE_SUFFIX = "_gen.cpp";
 }
-
-GBVARIABLE(Edit);

@@ -158,6 +158,12 @@ namespace GB
 			const size_t includePathLength = endOfFolders - startOfSourceFolder;
 			m_CurrentOutputHeaderFileInclude = inputFilepath.substr(startOfSourceFolder, includePathLength);
 
+			// Filepath correction, scenarios where '\' was being used instead of a '/'.
+			if (!m_CurrentOutputHeaderFileInclude.empty())
+			{
+				std::replace(m_CurrentOutputHeaderFileInclude.begin(), m_CurrentOutputHeaderFileInclude.end(), '\\', '/');
+			}
+
 			auto hasPrintedEndStatementFunc = [&](const std::string& name) -> bool
 			{
 				if (reflectedClassPrintedEndStatement.find(currentObjectName) != reflectedClassPrintedEndStatement.end())
@@ -330,6 +336,10 @@ namespace GB
 			generatedCode.append("#include \"gbpch.h\"\n");
 			generatedCode.append(headerFileInclude);
 			generatedCode.append("#include <GBReflect.h>\n\n");
+
+			generatedCode.append("DISABLE_WARNING_PUSH\n");
+			generatedCode.append("DISABLE_WARNING_OFFSET_OF_CONDITIONALLY_SUPPORTED\n\n");
+
 			generatedCode.append("namespace GB\n");
 			generatedCode.append("{\n");
 
@@ -362,7 +372,9 @@ namespace GB
 				}
 			}
 
-			generatedCode.append("}\n");
+			generatedCode.append("}\n\n");
+
+			generatedCode.append("DISABLE_WARNING_POP\n");
 
 			file << generatedCode;
 			file.close();
