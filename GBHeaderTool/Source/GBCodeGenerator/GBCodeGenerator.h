@@ -26,6 +26,11 @@ namespace GB
 	private:
 		bool IsValid();
 
+		void BeginWritingReflectionInitFile();
+		void AddComponentToReflectionInitFile(const std::string& includePath, const std::string& className);
+		void AddObjectToReflectionInitFile(const std::string& includePath, const std::string& className);
+		void EndWritingReflectionInitFile();
+
 		bool ProcessInputFile(const fs::path& filepath);
 		bool ProcessOutputFile(const fs::path& filepath);
 
@@ -51,5 +56,9 @@ namespace GB
 		std::vector<ObjectData> m_CurrentOutputObjectData;
 		fs::path m_CurrentOutputFilepath;
 		std::string m_CurrentOutputHeaderFileInclude;
+		
+		fs::path m_ReflectionInitFilepath;
+		std::string m_ReflectionInitCodeToWrite;
+		size_t m_ReflectionInitHeaderFileIncludeStringIndex;
 	};
 }

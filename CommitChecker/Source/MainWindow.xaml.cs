@@ -1,23 +1,15 @@
-﻿using System;
-using System.CodeDom.Compiler;
+﻿using CommitChecker.Source;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Timers;
+using System.Media;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using System.Windows.Threading;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace CommitChecker
 {
@@ -46,11 +38,21 @@ namespace CommitChecker
             get { return compileProcessErrorOutput; }
         }
 
-        public void StartCompilingProcess()
+        public void SetupCompilingProcess()
         {
             FindCompilingScriptPathForPlatform();
             Debug.Assert((compilingScriptPath != null && compilingScriptPath.Count() > 0), "Compiling script for platform " + platformName + " & configuration " + configurationName + " doesn't exist?");
+        
+            // Windows can start compiling now
+            // Linux will need file permissions and formatting first before calling StartCompilingProcess
+            if (platformName == PlatformData.Windows)
+            {
+                StartCompilingProcess();
+            }
+        }
 
+        public void StartCompilingProcess()
+        {
             process = new Process();
             process.EnableRaisingEvents = true;
             process.StartInfo.CreateNoWindow = true;
@@ -120,19 +122,56 @@ namespace CommitChecker
             return (compileProcessErrorOutput != null && compileProcessErrorOutput.Count() > 0);
         }
 
+        /// <summary>
+        /// Used only for Linux
+        /// Calls wsl chmod +x on the script file to give running permission
+        /// </summary>
         private void GivePermissionForCompileScripts()
         {
-            Debug.Assert(platformName != PlatformData.Linux, "Trying to give file permission on a Windows platform?");
+            Debug.Assert(platformName == PlatformData.Linux, "Trying to give file permission on a Windows platform?");
 
             process = new Process();
+            process.EnableRaisingEvents = true;
             process.StartInfo.RedirectStandardOutput = true;
             process.StartInfo.UseShellExecute = false;
             process.StartInfo.FileName = "powershell.exe";
             process.StartInfo.Arguments = @"-executionpolicy unrestricted wsl chmod +x " + compilingScriptPath;
             process.StartInfo.WorkingDirectory = System.AppDomain.CurrentDomain.BaseDirectory;
+            process.Exited += CompileScriptPermissionProcessFinished;
 
             bool processStartedSuccessfully = process.Start();
-            Debug.Assert(processStartedSuccessfully, "Failed to start " + platformName + " compile process. \nPlease check the arguments!");
+            Debug.Assert(processStartedSuccessfully, "Failed to give chmod +x permission for " + platformName + ". \nPlease check the arguments!");
+        }
+
+        private void CompileScriptPermissionProcessFinished(object sender, EventArgs e)
+        {
+            FormatCompileScript();
+        }
+
+        /// <summary>
+        /// Used only for Linux
+        /// Runs wsl dos2unix script.sh to make sure scripts are always in the correct format for Linux
+        /// </summary>
+        private void FormatCompileScript()
+        {
+            Debug.Assert(platformName == PlatformData.Linux, "Trying to format script file on a Windows platform?");
+
+            process = new Process();
+            process.EnableRaisingEvents = true;
+            process.StartInfo.RedirectStandardOutput = true;
+            process.StartInfo.UseShellExecute = false;
+            process.StartInfo.FileName = "powershell.exe";
+            process.StartInfo.Arguments = @"-executionpolicy unrestricted wsl dos2unix " + compilingScriptPath;
+            process.StartInfo.WorkingDirectory = System.AppDomain.CurrentDomain.BaseDirectory;
+            process.Exited += FormatCompileScriptProcessFinished;
+
+            bool processStartedSuccessfully = process.Start();
+            Debug.Assert(processStartedSuccessfully, "Failed to convert script file using dos2unix for " + platformName + ". \nPlease check the arguments!");
+        }
+
+        private void FormatCompileScriptProcessFinished(object sender, EventArgs e)
+        {
+            StartCompilingProcess();
         }
 
         private void FindCompilingScriptPathForPlatform()
@@ -174,6 +213,9 @@ namespace CommitChecker
     /// </summary>
     public partial class MainWindow : Window
     {
+        // Common
+        private readonly Random random = new Random();
+
         // Window variables
         private readonly WarningOrErrorWindow warningOrErrorWindow = new WarningOrErrorWindow();
         private readonly TargetsWindow targetsWindow = new TargetsWindow();
@@ -185,6 +227,21 @@ namespace CommitChecker
         private readonly BitmapImage redCrossImage = new BitmapImage(new Uri(@"Assets/Images/RedCross.png", UriKind.Relative));
         private bool compileSucceeded = false;
 
+        // Compiling sounds
+        private static MediaPlayer compileSuccessMediaPlayer = new MediaPlayer();
+        private static MediaPlayer compileFailedMediaPlayer = new MediaPlayer();
+        private readonly Uri compileSuccessSFX = new Uri(@"Assets/Audio/compile-success.wav", UriKind.Relative);
+        private readonly List<Uri> compileFailedSFX = new List<Uri> 
+        {
+            new Uri(@"Assets/Audio/compile-fail1.mp3", UriKind.Relative),
+            new Uri(@"Assets/Audio/compile-fail2.flac", UriKind.Relative),
+            new Uri(@"Assets/Audio/compile-fail3.mp3", UriKind.Relative),
+            new Uri(@"Assets/Audio/compile-fail4.wav", UriKind.Relative),
+            new Uri(@"Assets/Audio/compile-fail5.wav", UriKind.Relative),
+            new Uri(@"Assets/Audio/compile-fail6.wav", UriKind.Relative),
+            new Uri(@"Assets/Audio/compile-fail7.wav", UriKind.Relative),
+        };
+
         // Commit variables
         private readonly Process commitProcess = new Process();
         private readonly DispatcherTimer commitTimer = new DispatcherTimer();
@@ -194,10 +251,12 @@ namespace CommitChecker
 
         public MainWindow()
         {
+            //Debug.Listeners.Add(new AssertTraceListener());
+
             InitializeComponent();
 
             // Want to enable this platform/configuration by default
-            AddTargetToCompile(PlatformData.Linux, PlatformData.Debug);
+            AddTargetToCompile(PlatformData.Linux, PlatformData.Release);
 
             // Setup the timer here, but not starting it straight away, will be started once the user clicks on the "Compile" button.
             compileTimer.Tick += OnCompileTimerTick;
@@ -217,6 +276,17 @@ namespace CommitChecker
 
             commitProcess.StartInfo.FileName = "cmd.exe";
             commitProcess.Exited += CommitProcess_Exited;
+
+            compileSuccessMediaPlayer.Open(compileSuccessSFX);
+            compileFailedMediaPlayer.Open(GetRandomFailedSFX());
+
+            StartCompiling();
+        }
+
+        Uri GetRandomFailedSFX()
+        {
+            int randomCompileFailedSFXIndex = random.Next(compileFailedSFX.Count);
+            return compileFailedSFX[randomCompileFailedSFXIndex];
         }
 
         public void ClearTargetsToCompile()
@@ -267,14 +337,16 @@ namespace CommitChecker
                 Button_Compile.Visibility = Visibility.Collapsed;
                 Button_Compiling.Visibility = Visibility.Visible;
 
+                // Clear any previous warnings/errors found and hide the window so it can pop up again when needed
                 if (warningOrErrorWindow != null)
                 {
                     warningOrErrorWindow.TextBlock_WarningOrErrorsBox.Text = "";
+                    warningOrErrorWindow.Hide();
                 }
 
                 targetsToCompile.ForEach(target =>
                 {
-                    target.StartCompilingProcess();
+                    target.SetupCompilingProcess();
                 });
 
                 compileTimer.Start();
@@ -333,14 +405,33 @@ namespace CommitChecker
 
         private void OnCompilingSucceeded()
         {
+            compileSuccessMediaPlayer.Play();
+            compileSuccessMediaPlayer.MediaEnded += CompileSuccessMediaPlayer_MediaEnded;
+
             Image_CompileResults.Source = greenTickImage;
             Button_Commit.IsEnabled = true;
         }
 
+        private void CompileSuccessMediaPlayer_MediaEnded(object sender, EventArgs e)
+        {
+            compileSuccessMediaPlayer.Position = TimeSpan.Zero;
+            compileSuccessMediaPlayer.Stop();
+        }
+
         private void OnCompilingFailed()
         {
+            compileFailedMediaPlayer.Play();
+            compileFailedMediaPlayer.MediaEnded += CompileFailedMediaPlayer_MediaEnded;
+
             Image_CompileResults.Source = redCrossImage;
             Button_Commit.IsEnabled = false;
+        }
+
+        private void CompileFailedMediaPlayer_MediaEnded(object sender, EventArgs e)
+        {
+            compileFailedMediaPlayer.Position = TimeSpan.Zero;
+            compileFailedMediaPlayer.Stop();
+            compileFailedMediaPlayer.Open(GetRandomFailedSFX());
         }
 
         private void OnCompileTimerTick(object source, EventArgs e)

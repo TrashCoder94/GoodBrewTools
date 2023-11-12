@@ -12,8 +12,8 @@ project "CommitChecker"
 	{
 		"Source/**.cs",
 		"Source/**.xaml",
-		"Source/Assets/Images/**.png",
-		"Source/Assets/Images/**.ico"
+		"Source/Assets/Audio/**",
+		"Source/Assets/Images/**"
 	}
 
 	defines
@@ -41,8 +41,20 @@ project "CommitChecker"
 		"WindowsBase"
 	}
 	
-	filter "files:Source/Assets/Images/**.png"
+	filter "files:Source/Assets/Images/**"
 		buildaction "Resource"
+	filter {}
+	
+	filter "files:Source/Assets/Audio/**"
+		buildaction "Resource"
+	filter {}
+	
+	-- Needed to allow the use of Debug.Assert
+	filter { "configurations:Debug" }
+		defines
+		{
+			"DEBUG",
+		}
 	filter {}
 	
 	copyCommitCheckerAssetsToBinaryFolder()

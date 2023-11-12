@@ -113,14 +113,14 @@
                 <TextBlock Text="Debug"
                    HorizontalAlignment="Center"/>
                 <CheckBox  Name="Checkbox_Targets_DebugLinux"
-                   HorizontalAlignment="Center"
-                   IsChecked="True"/>
+                   HorizontalAlignment="Center"/>
             </StackPanel>
             <StackPanel Orientation="Vertical">
                 <TextBlock Text="Release"
                    HorizontalAlignment="Center"/>
                 <CheckBox  Name="Checkbox_Targets_ReleaseLinux"
-                   HorizontalAlignment="Center"/>
+                   HorizontalAlignment="Center"
+                   IsChecked="True"/>
             </StackPanel>
             <StackPanel Orientation="Vertical">
                 <TextBlock Text="Shipping"
