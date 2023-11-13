@@ -40,7 +40,11 @@ namespace reflect
 				case FieldType::Colour:					fieldTypeString = "Colour";					break;
 				case FieldType::Texture:				fieldTypeString = "Texture";				break;
 				case FieldType::Class:					fieldTypeString = "Class";					break;
+				case FieldType::ClassPtr:				fieldTypeString = "ClassPtr";				break;
 				case FieldType::Vector:					fieldTypeString = "Vector";					break;
+				case FieldType::UniquePtr:				fieldTypeString = "UniquePtr";				break;
+				case FieldType::SharedPtr:				fieldTypeString = "SharedPtr";				break;
+				case FieldType::WeakPtr:				fieldTypeString = "WeakPtr";				break;
 				default: break;
 			}
 
@@ -132,7 +136,7 @@ namespace reflect
 
 	// Partially specialize TypeResolver<> for std::unique_ptr<>:
 	template <typename T>
-	class TypeResolver<std::unique_ptr<T>> {
+	struct TypeResolver<std::unique_ptr<T>> {
 	public:
 		static TypeDescriptor* get() {
 			static TypeDescriptor_StdUniquePtr typeDesc{ (T*) nullptr };
@@ -184,7 +188,7 @@ namespace reflect
 
 	// Partially specialize TypeResolver<> for std::shared_ptr<>:
 	template <typename T>
-	class TypeResolver<std::shared_ptr<T>> {
+	struct TypeResolver<std::shared_ptr<T>> {
 	public:
 		static TypeDescriptor* get() {
 			static TypeDescriptor_StdSharedPtr typeDesc{ (T*) nullptr };
@@ -207,11 +211,15 @@ namespace reflect
 			targetType{ TypeResolver<TargetType>::get() } {
 			getTargetConst = [](const void* weakPtrPtr) -> const void* {
 				const auto& weakPtr = *(const std::weak_ptr<TargetType>*) weakPtrPtr;
-				return weakPtr.get();
+				if (std::shared_ptr<TargetType> pShared = weakPtr.lock())
+					return pShared.get();
+				return nullptr;
 				};
 			getTarget = [](const void* weakPtrPtr) -> void* {
 				const auto& weakPtr = *(const std::weak_ptr<TargetType>*) weakPtrPtr;
-				return weakPtr.get();
+				if (std::shared_ptr<TargetType> pShared = weakPtr.lock())
+					return pShared.get();
+				return nullptr;
 				};
 		}
 		virtual std::string getFullName() const override {
@@ -236,7 +244,7 @@ namespace reflect
 
 	// Partially specialize TypeResolver<> for std::weak_ptr<>:
 	template <typename T>
-	class TypeResolver<std::weak_ptr<T>> {
+	struct TypeResolver<std::weak_ptr<T>> {
 	public:
 		static TypeDescriptor* get() {
 			static TypeDescriptor_StdWeakPtr typeDesc{ (T*) nullptr };

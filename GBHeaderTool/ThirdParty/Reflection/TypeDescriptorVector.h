@@ -68,7 +68,7 @@ namespace reflect
 
 	// Partially specialize TypeResolver<> for std::vectors:
 	template <typename T>
-	class TypeResolver<std::vector<T>> {
+	struct TypeResolver<std::vector<T>> {
 	public:
 		static TypeDescriptor* get() {
 			static TypeDescriptor_StdVector typeDesc{ (T*) nullptr };

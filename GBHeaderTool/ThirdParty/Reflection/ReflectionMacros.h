@@ -8,7 +8,7 @@
 #define REFLECT() \
     friend struct reflect::DefaultResolver; \
     static reflect::TypeDescriptor_Struct Reflection; \
-    static void initReflection(reflect::TypeDescriptor_Struct*);
+    public: static void initReflection(reflect::TypeDescriptor_Struct*);
 
 #define REFLECT_STRUCT_BEGIN(type) \
     reflect::TypeDescriptor_Struct type::Reflection{type::initReflection}; \

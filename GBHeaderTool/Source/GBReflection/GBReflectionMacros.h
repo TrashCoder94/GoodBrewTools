@@ -23,7 +23,6 @@
 		GB::ClassRegistry::Get().Register<type>(#type);\
         typeDesc->name = #type; \
         typeDesc->size = sizeof(T); \
-		typeDesc->fieldType = reflect::FieldType::Class;\
         typeDesc->members = {
 
 #define GB_REFLECT_CLASS_MEMBER(name) \
