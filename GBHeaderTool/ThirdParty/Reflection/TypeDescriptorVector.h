@@ -1,14 +1,13 @@
 #pragma once
 
 #include <iostream>
-#include <memory>
 #include <string>
 #include <vector>
+
 #include "TypeDescriptor.h"
 
 namespace reflect
 {
-
 	//--------------------------------------------------------
 	// Type descriptors for std::vector
 	//--------------------------------------------------------
@@ -25,26 +24,78 @@ namespace reflect
 		TypeDescriptor_StdVector(ItemType*, FieldType vectorFieldType = FieldType::Vector)
 			: TypeDescriptor{ "std::vector<>", sizeof(std::vector<ItemType>), vectorFieldType },
 			itemType{ TypeResolver<ItemType>::get() } {
-			addNewItem = [](const void* vecPtr) {
+			addNewItem = [](const void* vecPtr) 
+			{
 				auto& vec = *(std::vector<ItemType>*) vecPtr;
-				vec.emplace_back();
-				};
-			removeItem = [](const void* vecPtr, size_t index) {
+				
+				// Raw ptrs
+				if constexpr (std::is_pointer<ItemType>::value)
+				{
+					using TargetType = std::remove_pointer_t<ItemType>;
+					vec.emplace_back(new TargetType());
+				}
+				// Smart ptrs - unique_ptr/shared_ptr
+				else if constexpr (is_unique_ptr<ItemType>::value || is_shared_ptr<ItemType>::value)
+				{
+					using TargetType = std::remove_reference_t<decltype(*std::declval<ItemType>())>;
+					vec.emplace_back(new TargetType());
+				}
+				// Smart ptrs - weak_ptr
+				else if constexpr (is_weak_ptr<ItemType>::value)
+				{
+					using TargetType = std::remove_reference_t<decltype(std::declval<ItemType>())>;
+					std::shared_ptr<TargetType> pSharedPtr{ std::make_shared<TargetType>() };
+					std::weak_ptr<TargetType> pWeakPtr{ pSharedPtr };
+					vec.push_back(pWeakPtr);
+				}
+				// Everything else
+				else
+				{
+					vec.emplace_back();
+				}
+			};
+			removeItem = [](const void* vecPtr, size_t index) 
+			{
 				auto& vec = *(std::vector<ItemType>*) vecPtr;
+
+				// Raw ptrs
+				if constexpr (std::is_pointer<ItemType>::value)
+				{
+					delete vec.at(index);
+					vec.at(index) = nullptr;
+				}
+
 				vec.erase(vec.begin() + index);
-				};
-			clearAllItems = [](const void* vecPtr) {
+			};
+			clearAllItems = [](const void* vecPtr) 
+			{
 				auto& vec = *(std::vector<ItemType>*) vecPtr;
+
+				// Raw ptrs
+				if constexpr (std::is_pointer<ItemType>::value)
+				{
+					for (size_t iV = 0; iV < vec.size(); ++iV)
+					{
+						if (vec.at(iV))
+						{
+							delete vec.at(iV);
+							vec.at(iV) = nullptr;
+						}
+					}
+				}
+
 				vec.clear();
-				};
-			getSize = [](const void* vecPtr) -> size_t {
+			};
+			getSize = [](const void* vecPtr) -> size_t 
+			{
 				const auto& vec = *(const std::vector<ItemType>*) vecPtr;
 				return vec.size();
-				};
-			getItem = [](const void* vecPtr, size_t index) -> const void* {
+			};
+			getItem = [](const void* vecPtr, size_t index) -> const void* 
+			{
 				const auto& vec = *(const std::vector<ItemType>*) vecPtr;
 				return &vec[index];
-				};
+			};
 		}
 		virtual std::string getFullName() const override {
 			return std::string("std::vector<") + itemType->getFullName() + ">";

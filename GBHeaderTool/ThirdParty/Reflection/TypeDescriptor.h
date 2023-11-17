@@ -1,7 +1,8 @@
 #pragma once
 
-#include <memory>
 #include <string>
+
+#include "Base.h"
 #include "FieldType.h"
 
 namespace reflect
