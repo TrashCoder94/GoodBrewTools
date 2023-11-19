@@ -1,6 +1,9 @@
 #pragma once
 
+#include <cassert>
+#include <iostream>
 #include <memory>
+#include <string>
 #include <type_traits>
 
 namespace reflect

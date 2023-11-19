@@ -1,7 +1,5 @@
 #pragma once
 
-#include <string>
-
 #include "Base.h"
 #include "FieldType.h"
 
