@@ -24,6 +24,9 @@ namespace reflect
 		TypeDescriptor_StdVector(ItemType*, FieldType vectorFieldType = FieldType::Vector)
 			: TypeDescriptor{ "std::vector<>", sizeof(std::vector<ItemType>), vectorFieldType },
 			itemType{ TypeResolver<ItemType>::get() } {
+
+			static_assert(!is_weak_ptr<ItemType>::value, "Cannot have a reflected std::vector<std::weak_ptr> with this reflection system - sorry!");
+
 			addNewItem = [](const void* vecPtr) 
 			{
 				auto& vec = *(std::vector<ItemType>*) vecPtr;
@@ -39,14 +42,6 @@ namespace reflect
 				{
 					using TargetType = std::remove_reference_t<decltype(*std::declval<ItemType>())>;
 					vec.emplace_back(new TargetType());
-				}
-				// Smart ptrs - weak_ptr
-				else if constexpr (is_weak_ptr<ItemType>::value)
-				{
-					using TargetType = std::remove_reference_t<decltype(std::declval<ItemType>())>;
-					std::shared_ptr<TargetType> pSharedPtr{ std::make_shared<TargetType>() };
-					std::weak_ptr<TargetType> pWeakPtr{ pSharedPtr };
-					vec.push_back(pWeakPtr);
 				}
 				// Everything else
 				else
